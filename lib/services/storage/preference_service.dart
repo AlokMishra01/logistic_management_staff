@@ -1,9 +1,9 @@
 import 'dart:convert';
 
+import 'package:logistic_management_staff/models/staff_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constants/preferences.dart' as preferences;
-import '../../models/consumer_mode.dart';
 
 class PreferenceService {
   late SharedPreferences _sharedPreferences;
@@ -18,14 +18,9 @@ class PreferenceService {
         isLogin,
       );
 
-  setUser(ConsumerModel consumer) => _sharedPreferences.setString(
-        preferences.CONSUMER,
-        jsonEncode(consumer.toJson()),
-      );
-
-  setToken(String token) => _sharedPreferences.setString(
-        preferences.TOKEN,
-        token,
+  setUser(StaffModel staff) => _sharedPreferences.setString(
+        preferences.STAFF,
+        jsonEncode(staff.toJson()),
       );
 
   clearPreferences() => _sharedPreferences.clear();
@@ -33,11 +28,11 @@ class PreferenceService {
   // Getters
   bool get isLogin => _sharedPreferences.getBool(preferences.IS_LOGIN) ?? false;
 
-  ConsumerModel get consumer => ConsumerModel.fromJson(
+  StaffModel get staff => StaffModel.fromJson(
         jsonDecode(
-          _sharedPreferences.getString(preferences.CONSUMER) ?? '{}',
+          _sharedPreferences.getString(preferences.STAFF) ?? '{}',
         ),
       );
 
-  String get token => _sharedPreferences.getString(preferences.TOKEN) ?? '';
+  // String get token => _sharedPreferences.getString(preferences.TOKEN) ?? '';
 }

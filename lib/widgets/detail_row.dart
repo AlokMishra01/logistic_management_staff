@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/colors.dart' as colors;
@@ -16,8 +17,10 @@ class DetailRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RichText(
+      overflow: TextOverflow.ellipsis,
+      maxLines: 1,
       text: TextSpan(
-        text: '$title : ',
+        text: '$title ',
         style: TextStyle(
           fontSize: values.DETAILS_TEXT + 2,
           color: colors.TEXT_SECONDARY,

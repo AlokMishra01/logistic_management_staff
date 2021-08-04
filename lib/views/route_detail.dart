@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+
 import '../constants/colors.dart';
 import '../constants/values.dart';
 import '../widgets/header.dart';
-import '../widgets/order_list_item.dart';
 
 class RouteDetail extends StatelessWidget {
   @override
@@ -40,8 +40,8 @@ class RouteDetail extends StatelessWidget {
                             ),
                           ),
                         ),
-                      OrderListItem(isactive: 2 != i),
-                      if (i == 2) SizedBox(height: HEADER_TEXT * 2),
+                      // OrderListItem(isactive: 2 != i),
+                      SizedBox(height: HEADER_TEXT * 2),
                     ],
                   );
                 },

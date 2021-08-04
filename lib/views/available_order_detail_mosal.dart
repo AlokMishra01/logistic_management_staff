@@ -1,12 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:logistic_management_staff/models/dispatch_model.dart';
+import 'package:logistic_management_staff/models/request_model.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import '../../constants/colors.dart';
 import '../../constants/values.dart';
 import '../../widgets/detail_row.dart';
 import '../../widgets/general_button.dart';
 import '../../widgets/profile_info_heading.dart';
+import 'map_view.dart';
 
 class AvailableOrderDetailModal extends StatelessWidget {
+  final bool isPickOff;
+  final RequestModel request;
+  final DispatchModel dispatch;
+
+  const AvailableOrderDetailModal({
+    Key? key,
+    required this.request,
+    required this.dispatch,
+    this.isPickOff = true,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -67,15 +84,73 @@ class AvailableOrderDetailModal extends StatelessWidget {
                             ),
                           ],
                         ),
-                        onTab: () {},
+                        onTab: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => MapPage(
+                                latLngFrom: LatLng(
+                                  double.parse(
+                                    isPickOff
+                                        ? request.senderLat ??
+                                            '27.688250415756407'
+                                        : dispatch.senderLat ??
+                                            '27.688250415756407',
+                                  ),
+                                  double.parse(
+                                    isPickOff
+                                        ? request.senderLon ??
+                                            '85.33557353207128'
+                                        : dispatch.senderLon ??
+                                            '85.33557353207128',
+                                  ),
+                                ),
+                                latLngTo: LatLng(
+                                  double.parse(
+                                    isPickOff
+                                        ? request.recieverLat ??
+                                            '27.688250415756407'
+                                        : dispatch.recieverLat ??
+                                            '27.688250415756407',
+                                  ),
+                                  double.parse(
+                                    isPickOff
+                                        ? request.recieverLon ??
+                                            '85.33557353207128'
+                                        : dispatch.recieverLon ??
+                                            '85.33557353207128',
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
                     SizedBox(height: BASE_PADDING),
                     ProfileInfoHeading(title: 'Sender Inforamtion'),
-                    DetailRow(title: 'Name: ', value: 'Rajendra Prajapati'),
-                    DetailRow(title: 'Address: ', value: 'Bhaktapur'),
-                    DetailRow(title: 'Mobile Number: ', value: '9878787654'),
-                    DetailRow(title: 'Email: ', value: 'Rajendra@gmail.com'),
+                    DetailRow(
+                      title: 'Name: ',
+                      value: isPickOff
+                          ? '${request.senderName}'
+                          : '${dispatch.senderName}',
+                    ),
+                    DetailRow(
+                      title: 'Address: ',
+                      value: isPickOff
+                          ? '${request.senderAddress}'
+                          : '${dispatch.senderAddress}',
+                    ),
+                    DetailRow(
+                      title: 'Mobile Number: ',
+                      value: isPickOff
+                          ? '${request.senderMobileno}'
+                          : '${dispatch.senderMobileno}',
+                    ),
+                    DetailRow(
+                      title: 'Email: ',
+                      value: '',
+                    ),
                     Align(
                       alignment: Alignment.centerRight,
                       child: GeneralButton(
@@ -88,15 +163,33 @@ class AvailableOrderDetailModal extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        onTab: () {},
+                        onTab: () {
+                          launch(
+                              'tel: ${isPickOff ? request.senderMobileno : dispatch.senderMobileno}');
+                        },
                       ),
                     ),
                     SizedBox(height: BASE_PADDING),
                     ProfileInfoHeading(title: 'Reciever Inforamtion'),
-                    DetailRow(title: 'Name: ', value: 'Rajendra Prajapati'),
-                    DetailRow(title: 'Address: ', value: 'Bhaktapur'),
-                    DetailRow(title: 'Mobile Number: ', value: '9878787654'),
-                    DetailRow(title: 'Email: ', value: 'Rajendra@gmail.com'),
+                    DetailRow(
+                      title: 'Name: ',
+                      value: isPickOff
+                          ? '${request.recieverName}'
+                          : '${dispatch.recieverName}',
+                    ),
+                    DetailRow(
+                      title: 'Address: ',
+                      value: isPickOff
+                          ? '${request.recieverAddress}'
+                          : '${dispatch.recieverAddress}',
+                    ),
+                    DetailRow(
+                      title: 'Mobile Number: ',
+                      value: isPickOff
+                          ? '${request.recieverMobileno}'
+                          : '${dispatch.recieverMobileno}',
+                    ),
+                    DetailRow(title: 'Email: ', value: ''),
                     Align(
                       alignment: Alignment.centerRight,
                       child: GeneralButton(
@@ -109,13 +202,38 @@ class AvailableOrderDetailModal extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        onTab: () {},
+                        onTab: () {
+                          launch(
+                              'tel: ${isPickOff ? request.recieverMobileno : dispatch.recieverMobileno}');
+                        },
                       ),
                     ),
                     SizedBox(height: BASE_PADDING),
                     ProfileInfoHeading(title: 'Delivery / Pickup Inforamtion'),
-                    DetailRow(title: 'Date: ', value: '1st Jan,2021'),
-                    DetailRow(title: 'Time: ', value: '1.00 PM'),
+                    isPickOff
+                        ? DetailRow(
+                            title: 'Pickup Date: ',
+                            value: '${request.pickupDate}',
+                          )
+                        : Container(),
+                    isPickOff
+                        ? DetailRow(
+                            title: 'Pickup Time: ',
+                            value: '${request.pickupTime}',
+                          )
+                        : Container(),
+                    !isPickOff
+                        ? DetailRow(
+                            title: 'Delivery Date: ',
+                            value: '${dispatch.dropoffDate}',
+                          )
+                        : Container(),
+                    !isPickOff
+                        ? DetailRow(
+                            title: 'Delivery Time: ',
+                            value: '${dispatch.dropoffTime}',
+                          )
+                        : Container(),
                     Align(
                       alignment: Alignment.centerRight,
                       child: GeneralButton(

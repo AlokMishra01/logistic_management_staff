@@ -1,16 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:logistic_management_staff/models/dispatch_model.dart';
+import 'package:logistic_management_staff/models/request_model.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import '../../constants/colors.dart';
 import '../../constants/values.dart';
 import '../../widgets/detail_row.dart';
 import '../views/available_order_detail_mosal.dart';
 
 class OrderListItem extends StatelessWidget {
-  final bool isactive;
+  final bool isPickOff;
+  final RequestModel request;
+  final DispatchModel dispatch;
 
   const OrderListItem({
     Key? key,
-    this.isactive = true,
+    required this.request,
+    required this.dispatch,
+    this.isPickOff = true,
   }) : super(key: key);
 
   @override
@@ -22,7 +30,8 @@ class OrderListItem extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: BASE_PADDING / 1.25),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(RADIUS),
-            color: (isactive) ? GREEN : BLUE_BACKGROUND,
+            color: GREEN,
+            // color: (isactive) ? GREEN : BLUE_BACKGROUND,
           ),
           child: Column(
             children: [
@@ -34,32 +43,40 @@ class OrderListItem extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (isactive)
-                        DetailRow(
-                          title: "Time",
-                          value: "1:00 PM",
+                      // if (isactive)
+                      DetailRow(
+                        title: "Time",
+                        value: isPickOff
+                            ? "${request.pickupTime}"
+                            : "${dispatch.dropoffTime}",
+                      ),
+                      // if (!isactive)
+                      Text(
+                        '',
+                        style: TextStyle(
+                          fontSize: DETAILS_TEXT + 2,
+                          color: TEXT_SECONDARY,
+                          fontWeight: FontWeight.w400,
+                          height: 1.5,
                         ),
-                      if (!isactive)
-                        Text(
-                          '',
-                          style: TextStyle(
-                            fontSize: DETAILS_TEXT + 2,
-                            color: TEXT_SECONDARY,
-                            fontWeight: FontWeight.w400,
-                            height: 1.5,
-                          ),
-                        ),
+                      ),
                       DetailRow(
                         title: "Customer Name",
-                        value: "Birendra Thapa",
+                        value: isPickOff
+                            ? "${request.senderName}"
+                            : "${dispatch.recieverName}",
                       ),
                       DetailRow(
                         title: "Address",
-                        value: "Bhaktapur",
+                        value: isPickOff
+                            ? "${request.recieverAddress}"
+                            : "${dispatch.recieverAddress}",
                       ),
                       DetailRow(
                         title: "Contact",
-                        value: "+977 - 9878989898",
+                        value: isPickOff
+                            ? "${request.senderMobileno}"
+                            : "${dispatch.recieverMobileno}",
                       ),
                     ],
                   ),
@@ -70,7 +87,11 @@ class OrderListItem extends StatelessWidget {
                         CupertinoIcons.phone_fill,
                         color: TEXT_WHITE,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        isPickOff
+                            ? launch('tel: ${request.senderMobileno}')
+                            : launch('tel: ${dispatch.recieverMobileno}');
+                      },
                     ),
                   ),
                 ],
@@ -83,7 +104,9 @@ class OrderListItem extends StatelessWidget {
                     fit: FlexFit.tight,
                     flex: 1,
                     child: Text(
-                      "5 Kg.",
+                      isPickOff
+                          ? "${request.packageWeight} Kg."
+                          : "${dispatch.packageWeight} Kg.",
                       textAlign: TextAlign.start,
                       style: TextStyle(
                         fontSize: DETAILS_TEXT,
@@ -96,7 +119,11 @@ class OrderListItem extends StatelessWidget {
                     onPressed: () {
                       showModalBottomSheet(
                         context: (context),
-                        builder: (_) => AvailableOrderDetailModal(),
+                        builder: (_) => AvailableOrderDetailModal(
+                          request: isPickOff ? request : RequestModel(),
+                          dispatch: isPickOff ? DispatchModel() : dispatch,
+                          isPickOff: isPickOff,
+                        ),
                         isScrollControlled: false,
                         backgroundColor: TEXT_WHITE,
                         shape: RoundedRectangleBorder(
@@ -113,7 +140,7 @@ class OrderListItem extends StatelessWidget {
                     fit: FlexFit.tight,
                     flex: 1,
                     child: Text(
-                      "Rs.200",
+                      "", // TODO: price in api
                       textAlign: TextAlign.end,
                       style: TextStyle(
                         fontSize: DETAILS_TEXT,
@@ -127,40 +154,44 @@ class OrderListItem extends StatelessWidget {
             ],
           ),
         ),
-        if (!isactive)
-          Positioned(
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Material(
-              borderRadius: BorderRadius.circular(RADIUS),
-              color: TEXT_WHITE.withOpacity(0.5),
-            ),
-          ),
-        if (!isactive)
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: IconButton(
-              onPressed: () {
-                showModalBottomSheet(
-                  context: (context),
-                  builder: (_) => AvailableOrderDetailModal(),
-                  isScrollControlled: false,
-                  backgroundColor: TEXT_WHITE,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(RADIUS),
-                    ),
+        // if (!isactive)
+        // Positioned(
+        //   top: 0,
+        //   bottom: 0,
+        //   left: 0,
+        //   right: 0,
+        //   child: Material(
+        //     borderRadius: BorderRadius.circular(RADIUS),
+        //     color: TEXT_WHITE.withOpacity(0.5),
+        //   ),
+        // ),
+        // if (!isactive)
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: IconButton(
+            onPressed: () {
+              showModalBottomSheet(
+                context: (context),
+                builder: (_) => AvailableOrderDetailModal(
+                  request: isPickOff ? request : RequestModel(),
+                  dispatch: isPickOff ? DispatchModel() : dispatch,
+                  isPickOff: isPickOff,
+                ),
+                isScrollControlled: false,
+                backgroundColor: TEXT_WHITE,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(RADIUS),
                   ),
-                );
-              },
-              icon: Icon(CupertinoIcons.ellipsis),
-              color: Colors.transparent,
-            ),
+                ),
+              );
+            },
+            icon: Icon(CupertinoIcons.ellipsis),
+            color: Colors.transparent,
           ),
+        ),
       ],
     );
   }

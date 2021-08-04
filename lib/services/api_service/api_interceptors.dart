@@ -1,25 +1,26 @@
-import 'package:dio/dio.dart';
+import 'dart:developer';
 
-import '../storage/preference_service.dart';
+import 'package:dio/dio.dart';
 
 class ApiInterceptors extends Interceptor {
   @override
-  void onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
-    PreferenceService p = PreferenceService();
-    await p.init();
-    String token = p.token;
-    options.headers['Authorization'] = 'Bearer $token';
+  void onRequest(options, handler) async {
+    // PreferenceService p = PreferenceService();
+    // await p.init();
+    // String token = p.token;
+    // options.headers['Authorization'] = 'Bearer $token';
     handler.next(options);
   }
 
   @override
-  void onResponse(Response response, ResponseInterceptorHandler handler) {
+  void onResponse(response, handler) {
+    log(response.data.toString(), name: 'Response');
     handler.next(response);
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) {
+  void onError(err, handler) {
+    log(err.response!.data.toString(), name: 'ERROR');
     handler.next(err);
   }
 }

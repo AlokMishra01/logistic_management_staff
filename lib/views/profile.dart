@@ -2,11 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logistic_management_staff/constants/colors.dart';
 import 'package:logistic_management_staff/constants/values.dart';
+import 'package:logistic_management_staff/providers/authentication.dart';
 import 'package:logistic_management_staff/widgets/custom_button.dart';
 import 'package:logistic_management_staff/widgets/custom_input.dart';
 import 'package:logistic_management_staff/widgets/detail_row.dart';
 import 'package:logistic_management_staff/widgets/header.dart';
 import 'package:logistic_management_staff/widgets/profile_info_heading.dart';
+import 'package:provider/provider.dart';
+
+import 'login.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -35,6 +39,7 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final auth = context.watch<AuthenticationProvider>();
     return Column(
       children: [
         SizedBox(height: BASE_PADDING),
@@ -59,8 +64,8 @@ class _ProfileState extends State<Profile> {
               children: [
                 Center(
                   child: CircleAvatar(
-                    backgroundImage: AssetImage(
-                      "images/user.png",
+                    backgroundImage: NetworkImage(
+                      "${auth.staff!.photo}",
                     ),
                     radius: size.width * 0.2,
                     backgroundColor: TEXT_BLUE.withOpacity(0.2),
@@ -73,10 +78,22 @@ class _ProfileState extends State<Profile> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ProfileInfoHeading(title: 'Basic Information'),
-                      DetailRow(title: 'Name: ', value: 'Rajendra Prajapati'),
-                      DetailRow(title: 'Address: ', value: 'Bhaktapur'),
-                      DetailRow(title: 'Mobile Number: ', value: '9878787654'),
-                      DetailRow(title: 'Email', value: 'Rajendra@gmail.com'),
+                      DetailRow(
+                        title: 'Name: ',
+                        value: '${auth.staff!.name}',
+                      ),
+                      DetailRow(
+                        title: 'Address: ',
+                        value: '${auth.staff!.address}',
+                      ),
+                      DetailRow(
+                        title: 'Mobile Number: ',
+                        value: '${auth.staff!.phone}',
+                      ),
+                      DetailRow(
+                        title: 'Email',
+                        value: '${auth.staff!.email}',
+                      ),
                       SizedBox(height: BASE_PADDING * 2),
                       ProfileInfoHeading(title: 'Assigned Routes'),
                       for (TextEditingController c in _assignedRoutes)
@@ -107,6 +124,20 @@ class _ProfileState extends State<Profile> {
                       CustomButton(
                         title: 'View History',
                         onTab: () {},
+                      ),
+                      SizedBox(height: BASE_PADDING / 2),
+                      CustomButton(
+                        title: 'Logout',
+                        onTab: () {
+                          auth.logOut();
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => Login(),
+                            ),
+                            (route) => false,
+                          );
+                        },
                       ),
                       SizedBox(height: 60),
                     ],

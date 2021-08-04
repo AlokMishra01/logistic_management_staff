@@ -1,16 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../widgets/dialogs/loading_dialog.dart';
+import 'package:logistic_management_staff/models/staff_model.dart';
+import 'package:logistic_management_staff/providers/delivery_provider.dart';
+import 'package:logistic_management_staff/providers/pickup_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../constants/colors.dart' as colors;
 import '../constants/enums.dart' as enums;
 import '../constants/values.dart' as values;
-import '../models/consumer_mode.dart';
 import '../providers/authentication.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_input.dart';
 import '../widgets/dialogs/bottom_dialog.dart';
+import '../widgets/dialogs/loading_dialog.dart';
 import '../widgets/header_text.dart';
 import 'main_page.dart';
 import 'register.dart';
@@ -159,13 +161,20 @@ class _LoginState extends State<Login> {
           password: _password.text,
         );
 
-    if (loginResult is ConsumerModel) {
+    if (loginResult is StaffModel) {
       // showBottomDialog(
       //   context: context,
       //   dialogType: enums.DialogType.SUCCESS,
       //   title: 'Login Success',
       //   message: prettyJson(loginResult.toJson()),
       // );
+      context.read<DeliveryProvider>().fetchDispatched(
+            userId: context.read<AuthenticationProvider>().staff!.id ?? 1,
+          );
+      context.read<PickUpProvider>().fetchPickUp(
+            userId: context.read<AuthenticationProvider>().staff!.id ?? 1,
+          );
+      await Future.delayed(Duration(seconds: 3));
       progressDialog.dismiss();
       Navigator.pushAndRemoveUntil(
         context,

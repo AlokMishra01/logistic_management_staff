@@ -1,11 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:logistic_management_staff/models/dispatch_model.dart';
+import 'package:logistic_management_staff/models/request_model.dart';
+import 'package:logistic_management_staff/providers/delivery_provider.dart';
+import 'package:logistic_management_staff/providers/pickup_provider.dart';
+import 'package:logistic_management_staff/widgets/order_list_item.dart';
+import 'package:provider/provider.dart';
+
 import '../constants/values.dart';
 import '../widgets/custom_input.dart';
 import '../widgets/header.dart';
-import '../widgets/order_list_item.dart';
 
 class SearchPage extends StatefulWidget {
+  final bool isPickOff;
+
+  const SearchPage({
+    Key? key,
+    this.isPickOff = true,
+  }) : super(key: key);
+
   @override
   _SearchPageState createState() => _SearchPageState();
 }
@@ -21,6 +34,8 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    final pickUp = context.watch<PickUpProvider>();
+    final delivery = context.watch<DeliveryProvider>();
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -37,16 +52,28 @@ class _SearchPageState extends State<SearchPage> {
             Expanded(
               child: ListView.separated(
                 physics: BouncingScrollPhysics(),
-                itemCount: 3,
+                itemCount: widget.isPickOff
+                    ? pickUp.requests.length
+                    : delivery.dispatches.length,
                 separatorBuilder: (_, i) => SizedBox(height: BASE_PADDING),
                 itemBuilder: (_, i) {
+                  final r =
+                      widget.isPickOff ? pickUp.requests[i] : RequestModel();
+                  final d = widget.isPickOff
+                      ? DispatchModel()
+                      : delivery.dispatches[i];
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (i == 0) SizedBox(height: HEADER_TEXT / 2),
-                      OrderListItem(isactive: 2 != i),
-                      if (i == 2) SizedBox(height: HEADER_TEXT * 2),
+                      OrderListItem(
+                        request: r,
+                        dispatch: d,
+                        isPickOff: widget.isPickOff,
+                      ),
+                      if (i == pickUp.requests.length - 1)
+                        SizedBox(height: HEADER_TEXT * 2),
                     ],
                   );
                 },
