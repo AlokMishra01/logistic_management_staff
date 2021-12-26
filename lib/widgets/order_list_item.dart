@@ -1,22 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logistic_management_staff/models/dispatch_model.dart';
-import 'package:logistic_management_staff/models/request_model.dart';
+import 'package:logistic_management_staff/models/pickup_response_model.dart';
+import 'package:logistic_management_staff/views/available_order_detail_mosal.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/values.dart';
 import '../../widgets/detail_row.dart';
-import '../views/available_order_detail_mosal.dart';
 
 class OrderListItem extends StatelessWidget {
   final bool isPickOff;
-  final RequestModel request;
+  final PickupDataModel pickup;
   final DispatchModel dispatch;
 
   const OrderListItem({
     Key? key,
-    required this.request,
+    required this.pickup,
     required this.dispatch,
     this.isPickOff = true,
   }) : super(key: key);
@@ -43,14 +43,12 @@ class OrderListItem extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // if (isactive)
                       DetailRow(
                         title: "Time",
                         value: isPickOff
-                            ? "${request.pickupTime}"
+                            ? "${pickup.pickupTime}"
                             : "${dispatch.dropoffTime}",
                       ),
-                      // if (!isactive)
                       Text(
                         '',
                         style: TextStyle(
@@ -63,19 +61,19 @@ class OrderListItem extends StatelessWidget {
                       DetailRow(
                         title: "Customer Name",
                         value: isPickOff
-                            ? "${request.senderName}"
+                            ? "${pickup.senderName}"
                             : "${dispatch.recieverName}",
                       ),
                       DetailRow(
                         title: "Address",
                         value: isPickOff
-                            ? "${request.recieverAddress}"
+                            ? "${pickup.recieverAddress}"
                             : "${dispatch.recieverAddress}",
                       ),
                       DetailRow(
                         title: "Contact",
                         value: isPickOff
-                            ? "${request.senderMobileno}"
+                            ? "${pickup.senderMobileno}"
                             : "${dispatch.recieverMobileno}",
                       ),
                     ],
@@ -89,7 +87,7 @@ class OrderListItem extends StatelessWidget {
                       ),
                       onPressed: () {
                         isPickOff
-                            ? launch('tel: ${request.senderMobileno}')
+                            ? launch('tel: ${pickup.senderMobileno}')
                             : launch('tel: ${dispatch.recieverMobileno}');
                       },
                     ),
@@ -105,7 +103,7 @@ class OrderListItem extends StatelessWidget {
                     flex: 1,
                     child: Text(
                       isPickOff
-                          ? "${request.packageWeight} Kg."
+                          ? "${pickup.packageWeight} Kg."
                           : "${dispatch.packageWeight} Kg.",
                       textAlign: TextAlign.start,
                       style: TextStyle(
@@ -120,7 +118,7 @@ class OrderListItem extends StatelessWidget {
                       showModalBottomSheet(
                         context: (context),
                         builder: (_) => AvailableOrderDetailModal(
-                          request: isPickOff ? request : RequestModel(),
+                          pickup: isPickOff ? pickup : PickupDataModel(),
                           dispatch: isPickOff ? DispatchModel() : dispatch,
                           isPickOff: isPickOff,
                         ),
@@ -140,7 +138,7 @@ class OrderListItem extends StatelessWidget {
                     fit: FlexFit.tight,
                     flex: 1,
                     child: Text(
-                      "", // TODO: price in api
+                      isPickOff ? 'NRs. ${pickup.packagePrice ?? 0.0}' : 'N/a',
                       textAlign: TextAlign.end,
                       style: TextStyle(
                         fontSize: DETAILS_TEXT,
@@ -175,7 +173,7 @@ class OrderListItem extends StatelessWidget {
               showModalBottomSheet(
                 context: (context),
                 builder: (_) => AvailableOrderDetailModal(
-                  request: isPickOff ? request : RequestModel(),
+                  pickup: isPickOff ? pickup : PickupDataModel(),
                   dispatch: isPickOff ? DispatchModel() : dispatch,
                   isPickOff: isPickOff,
                 ),

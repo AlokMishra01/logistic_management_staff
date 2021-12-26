@@ -1,17 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logistic_management_staff/models/dispatch_model.dart';
-import 'package:logistic_management_staff/models/request_model.dart';
-import 'package:logistic_management_staff/providers/authentication.dart';
-import 'package:logistic_management_staff/providers/delivery_provider.dart';
-import 'package:logistic_management_staff/providers/pickup_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:logistic_management_staff/widgets/order_list_item.dart';
+import 'package:provider/src/provider.dart';
 
 import '../constants/colors.dart';
 import '../constants/values.dart';
+import '../controllers/delivery_controller.dart';
+import '../controllers/pickup_controller.dart';
 import '../views/search_page.dart';
 import '../widgets/header.dart';
-import '../widgets/order_list_item.dart';
 import '../widgets/order_type_bar.dart';
 
 class AvailableOrders extends StatefulWidget {
@@ -24,13 +22,13 @@ class _AvailableOrdersState extends State<AvailableOrders> {
 
   @override
   Widget build(BuildContext context) {
-    final pickUp = context.watch<PickUpProvider>();
-    final delivery = context.watch<DeliveryProvider>();
+    final pickup = context.watch<PickupController>();
+    final delivery = context.watch<DeliveryController>();
     return Column(
       children: [
         SizedBox(height: BASE_PADDING),
         Header(
-          title: 'Availabel Order',
+          title: 'Available Order',
           trailing: Padding(
             padding: const EdgeInsets.symmetric(horizontal: BASE_PADDING),
             child: CircleAvatar(
@@ -85,51 +83,28 @@ class _AvailableOrdersState extends State<AvailableOrders> {
         ),
         Expanded(
           child: RefreshIndicator(
-            onRefresh: () => _selected == 0
-                ? context.read<PickUpProvider>().fetchPickUp(
-                      userId:
-                          context.read<AuthenticationProvider>().staff!.id ?? 1,
-                    )
-                : context.read<DeliveryProvider>().fetchDispatched(
-                      userId:
-                          context.read<AuthenticationProvider>().staff!.id ?? 1,
-                    ),
+            onRefresh: () =>
+                _selected == 0 ? pickup.getPendingPickups() : () {},
+            // : delivery.getPendingPickups(),
             child: ListView.separated(
               physics: AlwaysScrollableScrollPhysics(),
-              itemCount: _selected == 0
-                  ? pickUp.requests.length
-                  : delivery.dispatches.length,
+              padding: EdgeInsets.only(bottom: 60.0),
+              itemCount: _selected == 0 ? pickup.pendingPickups.length : 0,
+              // : delivery.dispatches.length,
               separatorBuilder: (_, i) => SizedBox(height: BASE_PADDING),
               itemBuilder: (_, i) {
-                final r = _selected == 0 ? pickUp.requests[i] : RequestModel();
-                final d =
-                    _selected == 0 ? DispatchModel() : delivery.dispatches[i];
+                final p = pickup.pendingPickups[i];
+                // final d =
+                //     _selected == 0 ? DispatchModel() : delivery.dispatches[i];
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // if (i == 0)
-                    //   Padding(
-                    //     padding: const EdgeInsets.symmetric(
-                    //       horizontal: BASE_PADDING,
-                    //       vertical: BASE_PADDING / 2,
-                    //     ),
-                    //     child: Text(
-                    //       'Today',
-                    //       style: TextStyle(
-                    //         fontSize: TITLE_TEXT,
-                    //         fontWeight: FontWeight.w600,
-                    //         height: 1,
-                    //       ),
-                    //     ),
-                    //   ),
                     OrderListItem(
-                      request: r,
-                      dispatch: d,
+                      pickup: p,
+                      dispatch: DispatchModel(),
                       isPickOff: _selected == 0,
                     ),
-                    if (i == pickUp.requests.length - 1)
-                      SizedBox(height: HEADER_TEXT * 2),
                   ],
                 );
               },

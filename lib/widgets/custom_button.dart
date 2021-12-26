@@ -22,6 +22,7 @@ class CustomButton extends StatelessWidget {
       ),
       child: SizedBox(
         width: double.infinity,
+        height: 28.0,
         child: Center(
           child: Text(
             title,

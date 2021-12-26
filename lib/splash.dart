@@ -3,13 +3,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/authentication.dart';
-import '../views/main_page.dart';
+import '../controllers/authentication_controller.dart';
 import 'constants/colors.dart' as colors;
-import 'providers/delivery_provider.dart';
-import 'providers/pickup_provider.dart';
-import 'services/connectivity/network_connection.dart';
+import 'controllers/connectivity_controller.dart';
+import 'controllers/delivery_controller.dart';
+import 'controllers/dio_controller.dart';
+import 'controllers/geo_locator_controller.dart';
+import 'controllers/pickup_controller.dart';
+import 'services/preference_service.dart';
 import 'views/login.dart';
+import 'views/main_page.dart';
 
 class Splash extends StatefulWidget {
   const Splash({Key? key}) : super(key: key);
@@ -22,17 +25,18 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
-    context.read<NetworkConnection>().hasInternet;
-    context.read<AuthenticationProvider>();
-    context.read<DeliveryProvider>();
-    Timer(Duration(seconds: 2), () {
-      if (context.read<AuthenticationProvider>().isLoggedIn) {
-        context.read<DeliveryProvider>().fetchDispatched(
-              userId: context.read<AuthenticationProvider>().staff!.id ?? 1,
-            );
-        context.read<PickUpProvider>().fetchPickUp(
-              userId: context.read<AuthenticationProvider>().staff!.id ?? 1,
-            );
+    context.read<ConnectivityController>();
+    context.read<DioController>();
+    context.read<AuthenticationController>();
+    context.read<GeoLocatorController>();
+    context.read<PickupController>();
+    context.read<DeliveryController>();
+    _checkLogin();
+  }
+
+  _checkLogin() {
+    Timer(Duration(seconds: 2), () async {
+      if (await PreferenceService.service.isLogin) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (cxt) => MainPage()),

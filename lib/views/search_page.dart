@@ -1,11 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:logistic_management_staff/models/dispatch_model.dart';
-import 'package:logistic_management_staff/models/request_model.dart';
-import 'package:logistic_management_staff/providers/delivery_provider.dart';
-import 'package:logistic_management_staff/providers/pickup_provider.dart';
-import 'package:logistic_management_staff/widgets/order_list_item.dart';
-import 'package:provider/provider.dart';
 
 import '../constants/values.dart';
 import '../widgets/custom_input.dart';
@@ -34,8 +28,8 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final pickUp = context.watch<PickUpProvider>();
-    final delivery = context.watch<DeliveryProvider>();
+    // final pickUp = context.watch<PickUpProvider>();
+    // final delivery = context.watch<DeliveryProvider>();
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -49,36 +43,36 @@ class _SearchPageState extends State<SearchPage> {
                 icon: CupertinoIcons.search,
               ),
             ),
-            Expanded(
-              child: ListView.separated(
-                physics: BouncingScrollPhysics(),
-                itemCount: widget.isPickOff
-                    ? pickUp.requests.length
-                    : delivery.dispatches.length,
-                separatorBuilder: (_, i) => SizedBox(height: BASE_PADDING),
-                itemBuilder: (_, i) {
-                  final r =
-                      widget.isPickOff ? pickUp.requests[i] : RequestModel();
-                  final d = widget.isPickOff
-                      ? DispatchModel()
-                      : delivery.dispatches[i];
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (i == 0) SizedBox(height: HEADER_TEXT / 2),
-                      OrderListItem(
-                        request: r,
-                        dispatch: d,
-                        isPickOff: widget.isPickOff,
-                      ),
-                      if (i == pickUp.requests.length - 1)
-                        SizedBox(height: HEADER_TEXT * 2),
-                    ],
-                  );
-                },
-              ),
-            ),
+            // Expanded(
+            //   child: ListView.separated(
+            //     physics: BouncingScrollPhysics(),
+            //     itemCount: widget.isPickOff
+            //         ? pickUp.requests.length
+            //         : delivery.dispatches.length,
+            //     separatorBuilder: (_, i) => SizedBox(height: BASE_PADDING),
+            //     itemBuilder: (_, i) {
+            //       final r =
+            //           widget.isPickOff ? pickUp.requests[i] : RequestModel();
+            //       final d = widget.isPickOff
+            //           ? DispatchModel()
+            //           : delivery.dispatches[i];
+            //       return Column(
+            //         crossAxisAlignment: CrossAxisAlignment.start,
+            //         mainAxisSize: MainAxisSize.min,
+            //         children: [
+            //           if (i == 0) SizedBox(height: HEADER_TEXT / 2),
+            //           OrderListItem(
+            //             request: r,
+            //             dispatch: d,
+            //             isPickOff: widget.isPickOff,
+            //           ),
+            //           if (i == pickUp.requests.length - 1)
+            //             SizedBox(height: HEADER_TEXT * 2),
+            //         ],
+            //       );
+            //     },
+            //   ),
+            // ),
           ],
         ),
       ),

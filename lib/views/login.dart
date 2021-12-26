@@ -1,14 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:logistic_management_staff/models/staff_model.dart';
-import 'package:logistic_management_staff/providers/delivery_provider.dart';
-import 'package:logistic_management_staff/providers/pickup_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../constants/colors.dart' as colors;
-import '../constants/enums.dart' as enums;
+import '../constants/enums.dart';
 import '../constants/values.dart' as values;
-import '../providers/authentication.dart';
+import '../controllers/authentication_controller.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_input.dart';
 import '../widgets/dialogs/bottom_dialog.dart';
@@ -114,7 +111,11 @@ class _LoginState extends State<Login> {
                   ],
                 ),
                 SizedBox(height: values.BASE_PADDING / 2),
-                CustomButton(title: 'LOGIN', onTab: _login),
+                // CustomButton(title: 'LOGIN', onTab: _login),
+                CustomButton(
+                  title: 'LOGIN',
+                  onTab: _login,
+                ),
               ],
             ),
           ),
@@ -125,78 +126,124 @@ class _LoginState extends State<Login> {
 
   _login() async {
     FocusScope.of(context).requestFocus(FocusNode());
-    // if (!isPhoneValid(_phone.text)) {
-    //   showBottomDialog(
-    //     context: context,
-    //     dialogType: enums.DialogType.ERROR,
-    //     title: 'ERROR!',
-    //     message: 'Please enter valid mobile number',
-    //   );
-    //   return;
-    // }
-    if (_phone.text.isEmpty) {
+    if (_phone.text.length != 10) {
       showBottomDialog(
         context: context,
-        dialogType: enums.DialogType.ERROR,
+        dialogType: DialogType.ERROR,
         title: 'ERROR!',
-        message: 'Please enter mobile number',
+        message: 'Mobile number should have 10 numbers.',
       );
       return;
     }
-    if (_password.text.isEmpty) {
+    if (_password.text.length < 6) {
       showBottomDialog(
         context: context,
-        dialogType: enums.DialogType.ERROR,
+        dialogType: DialogType.ERROR,
         title: 'ERROR!',
-        message: 'Please enter password',
+        message: 'Password should have 6 characters.',
       );
       return;
     }
-
-    var progressDialog = getProgressDialog(context: context);
+    final progressDialog = getProgressDialog(context: context);
     progressDialog.show(useSafeArea: false);
 
-    var loginResult = await context.read<AuthenticationProvider>().login(
+    String result = await context.read<AuthenticationController>().login(
           phone: _phone.text.replaceAll(' ', ''),
           password: _password.text,
         );
 
-    if (loginResult is StaffModel) {
-      // showBottomDialog(
-      //   context: context,
-      //   dialogType: enums.DialogType.SUCCESS,
-      //   title: 'Login Success',
-      //   message: prettyJson(loginResult.toJson()),
-      // );
-      context.read<DeliveryProvider>().fetchDispatched(
-            userId: context.read<AuthenticationProvider>().staff!.id ?? 1,
-          );
-      context.read<PickUpProvider>().fetchPickUp(
-            userId: context.read<AuthenticationProvider>().staff!.id ?? 1,
-          );
-      await Future.delayed(Duration(seconds: 3));
-      progressDialog.dismiss();
+    progressDialog.dismiss();
+
+    if (result.isEmpty) {
+      showBottomDialog(
+        context: context,
+        dialogType: DialogType.SUCCESS,
+        title: 'Login Success',
+        message: 'You are successfully logged in.',
+      );
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => MainPage()),
+        MaterialPageRoute(
+          builder: (_) => MainPage(),
+        ),
         (route) => false,
       );
-    } else if (loginResult is String) {
-      progressDialog.dismiss();
-      showBottomDialog(
-        context: context,
-        dialogType: enums.DialogType.ERROR,
-        title: 'Login Error',
-        message: loginResult,
-      );
     } else {
-      progressDialog.dismiss();
       showBottomDialog(
         context: context,
-        dialogType: enums.DialogType.ERROR,
+        dialogType: DialogType.ERROR,
         title: 'Login Error',
-        message: 'Oops! Something went wrong. Please try again.',
+        message: result,
       );
     }
   }
+
+  // _login() async {
+  //   FocusScope.of(context).requestFocus(FocusNode());
+  //   if (!isPhoneValid(_phone.text)) {
+  //     // showBottomDialog(
+  //     //   context: context,
+  //     //   dialogType: DialogType.ERROR,
+  //     //   title: 'ERROR!',
+  //     //   message: 'Please enter valid mobile number',
+  //     // );
+  //     return;
+  //   }
+  //   // if (_phone.text.isEmpty) {
+  //   //   showBottomDialog(
+  //   //     context: context,
+  //   //     dialogType: DialogType.ERROR,
+  //   //     title: 'ERROR!',
+  //   //     message: 'Please enter mobile number',
+  //   //   );
+  //   //   return;
+  //   // }
+  //   if (_password.text.isEmpty) {
+  //     // showBottomDialog(
+  //     //   context: context,
+  //     //   dialogType: DialogType.ERROR,
+  //     //   title: 'ERROR!',
+  //     //   message: 'Please enter password',
+  //     // );
+  //     return;
+  //   }
+  //
+  //   var progressDialog = getProgressDialog(context: context);
+  //   progressDialog.show(useSafeArea: false);
+  //
+  //   var loginResult = await context.read<AuthenticationController>().login(
+  //         phone: _phone.text.replaceAll(' ', ''),
+  //         password: _password.text,
+  //       );
+  //
+  //   if (loginResult.isEmpty) {
+  //     showBottomDialog(
+  //       context: context,
+  //       dialogType: DialogType.SUCCESS,
+  //       title: 'Login Success',
+  //       message: 'You are successfully logged in.',
+  //     );
+  //     // context.read<DeliveryProvider>().fetchDispatched(
+  //     //       userId: context.read<AuthenticationProvider>().staff!.id ?? 1,
+  //     //     );
+  //     // context.read<PickUpProvider>().fetchPickUp(
+  //     //       userId: context.read<AuthenticationProvider>().staff!.id ?? 1,
+  //     //     );
+  //     await Future.delayed(Duration(seconds: 1));
+  //     progressDialog.dismiss();
+  //     Navigator.pushAndRemoveUntil(
+  //       context,
+  //       MaterialPageRoute(builder: (_) => MainPage()),
+  //       (route) => false,
+  //     );
+  //   } else {
+  //     progressDialog.dismiss();
+  //     showBottomDialog(
+  //       context: context,
+  //       dialogType: DialogType.ERROR,
+  //       title: 'Login Error',
+  //       message: loginResult,
+  //     );
+  //   }
+  // }
 }

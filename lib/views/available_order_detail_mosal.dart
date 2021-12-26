@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logistic_management_staff/models/dispatch_model.dart';
-import 'package:logistic_management_staff/models/request_model.dart';
+import 'package:logistic_management_staff/models/pickup_response_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/colors.dart';
@@ -14,12 +14,12 @@ import 'map_view.dart';
 
 class AvailableOrderDetailModal extends StatelessWidget {
   final bool isPickOff;
-  final RequestModel request;
+  final PickupDataModel pickup;
   final DispatchModel dispatch;
 
   const AvailableOrderDetailModal({
     Key? key,
-    required this.request,
+    required this.pickup,
     required this.dispatch,
     this.isPickOff = true,
   }) : super(key: key);
@@ -92,14 +92,14 @@ class AvailableOrderDetailModal extends StatelessWidget {
                                 latLngFrom: LatLng(
                                   double.parse(
                                     isPickOff
-                                        ? request.senderLat ??
+                                        ? pickup.senderLat ??
                                             '27.688250415756407'
                                         : dispatch.senderLat ??
                                             '27.688250415756407',
                                   ),
                                   double.parse(
                                     isPickOff
-                                        ? request.senderLon ??
+                                        ? pickup.senderLon ??
                                             '85.33557353207128'
                                         : dispatch.senderLon ??
                                             '85.33557353207128',
@@ -108,14 +108,14 @@ class AvailableOrderDetailModal extends StatelessWidget {
                                 latLngTo: LatLng(
                                   double.parse(
                                     isPickOff
-                                        ? request.recieverLat ??
+                                        ? pickup.recieverLat ??
                                             '27.688250415756407'
                                         : dispatch.recieverLat ??
                                             '27.688250415756407',
                                   ),
                                   double.parse(
                                     isPickOff
-                                        ? request.recieverLon ??
+                                        ? pickup.recieverLon ??
                                             '85.33557353207128'
                                         : dispatch.recieverLon ??
                                             '85.33557353207128',
@@ -132,19 +132,19 @@ class AvailableOrderDetailModal extends StatelessWidget {
                     DetailRow(
                       title: 'Name: ',
                       value: isPickOff
-                          ? '${request.senderName}'
+                          ? '${pickup.senderName}'
                           : '${dispatch.senderName}',
                     ),
                     DetailRow(
                       title: 'Address: ',
                       value: isPickOff
-                          ? '${request.senderAddress}'
+                          ? '${pickup.senderAddress}'
                           : '${dispatch.senderAddress}',
                     ),
                     DetailRow(
                       title: 'Mobile Number: ',
                       value: isPickOff
-                          ? '${request.senderMobileno}'
+                          ? '${pickup.senderMobileno}'
                           : '${dispatch.senderMobileno}',
                     ),
                     DetailRow(
@@ -165,7 +165,9 @@ class AvailableOrderDetailModal extends StatelessWidget {
                         ),
                         onTab: () {
                           launch(
-                              'tel: ${isPickOff ? request.senderMobileno : dispatch.senderMobileno}');
+                            'tel: '
+                            '${isPickOff ? pickup.senderMobileno : dispatch.senderMobileno}',
+                          );
                         },
                       ),
                     ),
@@ -174,19 +176,19 @@ class AvailableOrderDetailModal extends StatelessWidget {
                     DetailRow(
                       title: 'Name: ',
                       value: isPickOff
-                          ? '${request.recieverName}'
+                          ? '${pickup.recieverName}'
                           : '${dispatch.recieverName}',
                     ),
                     DetailRow(
                       title: 'Address: ',
                       value: isPickOff
-                          ? '${request.recieverAddress}'
+                          ? '${pickup.recieverAddress}'
                           : '${dispatch.recieverAddress}',
                     ),
                     DetailRow(
                       title: 'Mobile Number: ',
                       value: isPickOff
-                          ? '${request.recieverMobileno}'
+                          ? '${pickup.recieverMobileno}'
                           : '${dispatch.recieverMobileno}',
                     ),
                     DetailRow(title: 'Email: ', value: ''),
@@ -204,7 +206,9 @@ class AvailableOrderDetailModal extends StatelessWidget {
                         ),
                         onTab: () {
                           launch(
-                              'tel: ${isPickOff ? request.recieverMobileno : dispatch.recieverMobileno}');
+                            'tel: '
+                            '${isPickOff ? pickup.recieverMobileno : dispatch.recieverMobileno}',
+                          );
                         },
                       ),
                     ),
@@ -213,13 +217,14 @@ class AvailableOrderDetailModal extends StatelessWidget {
                     isPickOff
                         ? DetailRow(
                             title: 'Pickup Date: ',
-                            value: '${request.pickupDate}',
+                            value: 'N/a',
+                            // value: '${pickup.pickupDate}',
                           )
                         : Container(),
                     isPickOff
                         ? DetailRow(
                             title: 'Pickup Time: ',
-                            value: '${request.pickupTime}',
+                            value: '${pickup.pickupTime}',
                           )
                         : Container(),
                     !isPickOff

@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:logistic_management_staff/constants/colors.dart';
-import 'package:logistic_management_staff/constants/values.dart';
-import 'package:logistic_management_staff/providers/authentication.dart';
-import 'package:logistic_management_staff/widgets/custom_button.dart';
-import 'package:logistic_management_staff/widgets/custom_input.dart';
-import 'package:logistic_management_staff/widgets/detail_row.dart';
-import 'package:logistic_management_staff/widgets/header.dart';
-import 'package:logistic_management_staff/widgets/profile_info_heading.dart';
 import 'package:provider/provider.dart';
 
+import '../constants/colors.dart';
+import '../constants/values.dart';
+import '../controllers/authentication_controller.dart';
+import '../widgets/custom_button.dart';
+import '../widgets/custom_input.dart';
+import '../widgets/detail_row.dart';
+import '../widgets/header.dart';
+import '../widgets/profile_info_heading.dart';
 import 'login.dart';
 
 class Profile extends StatefulWidget {
@@ -39,7 +39,7 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final auth = context.watch<AuthenticationProvider>();
+    final auth = context.watch<AuthenticationController>();
     return Column(
       children: [
         SizedBox(height: BASE_PADDING),
@@ -65,7 +65,7 @@ class _ProfileState extends State<Profile> {
                 Center(
                   child: CircleAvatar(
                     backgroundImage: NetworkImage(
-                      "${auth.staff!.photo}",
+                      "${auth.userModel?.photo}",
                     ),
                     radius: size.width * 0.2,
                     backgroundColor: TEXT_BLUE.withOpacity(0.2),
@@ -80,19 +80,20 @@ class _ProfileState extends State<Profile> {
                       ProfileInfoHeading(title: 'Basic Information'),
                       DetailRow(
                         title: 'Name: ',
-                        value: '${auth.staff!.name}',
+                        value: '${auth.userModel?.name}',
                       ),
                       DetailRow(
                         title: 'Address: ',
-                        value: '${auth.staff!.address}',
+                        // value: '${auth.userModel?.address}',
+                        value: 'N/a',
                       ),
                       DetailRow(
                         title: 'Mobile Number: ',
-                        value: '${auth.staff!.phone}',
+                        value: '${auth.userModel?.phone}',
                       ),
                       DetailRow(
                         title: 'Email',
-                        value: '${auth.staff!.email}',
+                        value: '${auth.userModel?.email}',
                       ),
                       SizedBox(height: BASE_PADDING * 2),
                       ProfileInfoHeading(title: 'Assigned Routes'),

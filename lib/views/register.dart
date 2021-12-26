@@ -1,18 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logistic_management_staff/views/main_page.dart';
-import 'package:logistic_management_staff/widgets/dialogs/loading_dialog.dart';
 import 'package:logistic_management_staff/widgets/register_timeline.dart';
-import 'package:provider/provider.dart';
 import 'package:validators/validators.dart';
 
-import '../constants/enums.dart' as enums;
 import '../constants/values.dart' as values;
-import '../models/consumer_mode.dart';
-import '../providers/authentication.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_input.dart';
-import '../widgets/dialogs/bottom_dialog.dart';
 import '../widgets/header_text.dart';
 
 class Register extends StatefulWidget {

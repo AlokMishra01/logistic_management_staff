@@ -38,6 +38,7 @@ class CustomInput extends StatelessWidget {
     return TextFormField(
       enabled: enabled,
       decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(values.RADIUS),
           borderSide: BorderSide(
