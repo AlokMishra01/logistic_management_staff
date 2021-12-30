@@ -1,14 +1,14 @@
 /// status : true
 /// status_code : 200
-/// message : "Pick up list"
-/// data : {"current_page":1,"last_page":1,"total":1,"data":[{"id":9,"sender_name":"Rabin Sapkotas","sender_address":"M9F4+JW Madhyapur Thimi, Nepal","sender_mobileno":9843053083,"sender_lat":"27.67400520","sender_lon":"85.35728085","reciever_name":"Rajesh Devkota","reciever_address":"Lele 44700, Nepal","reciever_mobileno":9841012012,"reciever_lat":"27.57608640","reciever_lon":"85.31498778","package_type":"Document","package_weight":1,"package_size":10,"pickup_time":"10:30:00","dropoff_time":"10:30:00","fragile":true,"package_price":10.0,"express":false,"status":"In Transit"}]}
+/// message : "Delivered List"
+/// data : {"current_page":1,"last_page":1,"total":2,"data":[{"id":12,"dispatch_id":9,"sender_name":"Sunil","sender_address":"Thapathali","sender_mobileno":9877890000,"sender_lat":"27.69036038","sender_lon":"85.31718761","reciever_name":"Divya","reciever_address":"Chabahil","reciever_mobileno":9871231230,"reciever_lat":"27.71646222","reciever_lon":"85.34810933","package_type":"Electronics","package_weight":2,"package_size":600,"pickup_time":"18:00:00","dropoff_time":"14:00:00","fragile":true,"package_price":0.0,"express":false,"status":"Dispatched"},{"id":13,"dispatch_id":9,"sender_name":"Shrijan","sender_address":"Kathmandu","sender_mobileno":9089878909,"sender_lat":"27.71390804","sender_lon":"85.32314169","reciever_name":"Hari","reciever_address":"Bhaktapur","reciever_mobileno":9089878909,"reciever_lat":"27.66320548","reciever_lon":"85.43400152","package_type":"Electronics","package_weight":1,"package_size":300,"pickup_time":"12:00:00","dropoff_time":"14:00:00","fragile":false,"package_price":null,"express":false,"status":"Dispatched"}]}
 
-class PickupResponseModel {
-  PickupResponseModel({
+class AssignedResponseModel {
+  AssignedResponseModel({
     bool? status,
     int? statusCode,
     String? message,
-    PickupResponseData? data,
+    AssignedData? data,
   }) {
     _status = status;
     _statusCode = statusCode;
@@ -16,22 +16,21 @@ class PickupResponseModel {
     _data = data;
   }
 
-  PickupResponseModel.fromJson(dynamic json) {
+  AssignedResponseModel.fromJson(dynamic json) {
     _status = json['status'];
     _statusCode = json['status_code'];
     _message = json['message'];
-    _data =
-        json['data'] != null ? PickupResponseData.fromJson(json['data']) : null;
+    _data = json['data'] != null ? AssignedData.fromJson(json['data']) : null;
   }
   bool? _status;
   int? _statusCode;
   String? _message;
-  PickupResponseData? _data;
+  AssignedData? _data;
 
   bool? get status => _status;
   int? get statusCode => _statusCode;
   String? get message => _message;
-  PickupResponseData? get data => _data;
+  AssignedData? get data => _data;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -47,79 +46,81 @@ class PickupResponseModel {
 
 /// current_page : 1
 /// last_page : 1
-/// total : 1
-/// data : [{"id":9,"sender_name":"Rabin Sapkotas","sender_address":"M9F4+JW Madhyapur Thimi, Nepal","sender_mobileno":9843053083,"sender_lat":"27.67400520","sender_lon":"85.35728085","reciever_name":"Rajesh Devkota","reciever_address":"Lele 44700, Nepal","reciever_mobileno":9841012012,"reciever_lat":"27.57608640","reciever_lon":"85.31498778","package_type":"Document","package_weight":1,"package_size":10,"pickup_time":"10:30:00","dropoff_time":"10:30:00","fragile":true,"package_price":10.0,"express":false,"status":"In Transit"}]
+/// total : 2
+/// data : [{"id":12,"dispatch_id":9,"sender_name":"Sunil","sender_address":"Thapathali","sender_mobileno":9877890000,"sender_lat":"27.69036038","sender_lon":"85.31718761","reciever_name":"Divya","reciever_address":"Chabahil","reciever_mobileno":9871231230,"reciever_lat":"27.71646222","reciever_lon":"85.34810933","package_type":"Electronics","package_weight":2,"package_size":600,"pickup_time":"18:00:00","dropoff_time":"14:00:00","fragile":true,"package_price":0.0,"express":false,"status":"Dispatched"},{"id":13,"dispatch_id":9,"sender_name":"Shrijan","sender_address":"Kathmandu","sender_mobileno":9089878909,"sender_lat":"27.71390804","sender_lon":"85.32314169","reciever_name":"Hari","reciever_address":"Bhaktapur","reciever_mobileno":9089878909,"reciever_lat":"27.66320548","reciever_lon":"85.43400152","package_type":"Electronics","package_weight":1,"package_size":300,"pickup_time":"12:00:00","dropoff_time":"14:00:00","fragile":false,"package_price":null,"express":false,"status":"Dispatched"}]
 
-class PickupResponseData {
-  PickupResponseData({
+class AssignedData {
+  AssignedData({
     int? currentPage,
     int? lastPage,
     int? total,
-    List<PickupDataModel>? data,
+    List<AssignedModel>? assignedList,
   }) {
     _currentPage = currentPage;
     _lastPage = lastPage;
     _total = total;
-    _data = data;
+    _assignedList = assignedList;
   }
 
-  PickupResponseData.fromJson(dynamic json) {
+  AssignedData.fromJson(dynamic json) {
     _currentPage = json['current_page'];
     _lastPage = json['last_page'];
     _total = json['total'];
     if (json['data'] != null) {
-      _data = [];
+      _assignedList = [];
       json['data'].forEach((v) {
-        _data?.add(PickupDataModel.fromJson(v));
+        _assignedList?.add(AssignedModel.fromJson(v));
       });
     }
   }
   int? _currentPage;
   int? _lastPage;
   int? _total;
-  List<PickupDataModel>? _data;
+  List<AssignedModel>? _assignedList;
 
   int? get currentPage => _currentPage;
   int? get lastPage => _lastPage;
   int? get total => _total;
-  List<PickupDataModel>? get data => _data;
+  List<AssignedModel>? get assignedList => _assignedList;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['current_page'] = _currentPage;
     map['last_page'] = _lastPage;
     map['total'] = _total;
-    if (_data != null) {
-      map['data'] = _data?.map((v) => v.toJson()).toList();
+    if (_assignedList != null) {
+      map['data'] = _assignedList?.map((v) => v.toJson()).toList();
     }
     return map;
   }
 }
 
-/// id : 9
-/// sender_name : "Rabin Sapkotas"
-/// sender_address : "M9F4+JW Madhyapur Thimi, Nepal"
-/// sender_mobileno : 9843053083
-/// sender_lat : "27.67400520"
-/// sender_lon : "85.35728085"
-/// reciever_name : "Rajesh Devkota"
-/// reciever_address : "Lele 44700, Nepal"
-/// reciever_mobileno : 9841012012
-/// reciever_lat : "27.57608640"
-/// reciever_lon : "85.31498778"
-/// package_type : "Document"
-/// package_weight : 1
-/// package_size : 10
-/// pickup_time : "10:30:00"
-/// dropoff_time : "10:30:00"
+/// id : 12
+/// dispatch_id : 9
+/// sender_name : "Sunil"
+/// sender_address : "Thapathali"
+/// sender_mobileno : 9877890000
+/// sender_lat : "27.69036038"
+/// sender_lon : "85.31718761"
+/// reciever_name : "Divya"
+/// reciever_address : "Chabahil"
+/// reciever_mobileno : 9871231230
+/// reciever_lat : "27.71646222"
+/// reciever_lon : "85.34810933"
+/// package_type : "Electronics"
+/// package_weight : 2
+/// package_size : 600
+/// pickup_time : "18:00:00"
+/// dropoff_time : "14:00:00"
 /// fragile : true
-/// package_price : 10.0
+/// package_price : 0.0
 /// express : false
-/// status : "In Transit"
+/// status : "Dispatched"
 
-class PickupDataModel {
-  PickupDataModel({
+class AssignedModel {
+  AssignedModel({
     int? id,
+    int? dispatchId,
     String? senderName,
     String? senderAddress,
     int? senderMobileno,
@@ -141,6 +142,7 @@ class PickupDataModel {
     String? status,
   }) {
     _id = id;
+    _dispatchId = dispatchId;
     _senderName = senderName;
     _senderAddress = senderAddress;
     _senderMobileno = senderMobileno;
@@ -162,8 +164,9 @@ class PickupDataModel {
     _status = status;
   }
 
-  PickupDataModel.fromJson(dynamic json) {
+  AssignedModel.fromJson(dynamic json) {
     _id = json['id'];
+    _dispatchId = json['dispatch_id'];
     _senderName = json['sender_name'];
     _senderAddress = json['sender_address'];
     _senderMobileno = json['sender_mobileno'];
@@ -180,11 +183,12 @@ class PickupDataModel {
     _pickupTime = json['pickup_time'];
     _dropoffTime = json['dropoff_time'];
     _fragile = json['fragile'];
-    _packagePrice = double.parse((json['package_price'] ?? 0.0).toString());
+    _packagePrice = json['package_price'];
     _express = json['express'];
     _status = json['status'];
   }
   int? _id;
+  int? _dispatchId;
   String? _senderName;
   String? _senderAddress;
   int? _senderMobileno;
@@ -206,6 +210,7 @@ class PickupDataModel {
   String? _status;
 
   int? get id => _id;
+  int? get dispatchId => _dispatchId;
   String? get senderName => _senderName;
   String? get senderAddress => _senderAddress;
   int? get senderMobileno => _senderMobileno;
@@ -229,6 +234,7 @@ class PickupDataModel {
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = _id;
+    map['dispatch_id'] = _dispatchId;
     map['sender_name'] = _senderName;
     map['sender_address'] = _senderAddress;
     map['sender_mobileno'] = _senderMobileno;

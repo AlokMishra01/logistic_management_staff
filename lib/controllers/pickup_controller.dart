@@ -95,6 +95,28 @@ class PickupController with ChangeNotifier {
     }
   }
 
+  Future<bool> pickupPackage({required int packageID}) async {
+    if (_dioController == null) {
+      return false;
+    }
+
+    if (!(_connectivityController?.hasInternet ?? false)) {
+      return false;
+    }
+
+    bool b = await _pickupService.postPackagePickup(
+      dio: _dioController!,
+      packageId: packageID,
+    );
+
+    if (b) {
+      getPendingPickups();
+      getPickedUpPickups();
+    }
+
+    return b;
+  }
+
   // Pending
   int _pagePendingAt = 1;
   bool _canPendingLoadMore = true;

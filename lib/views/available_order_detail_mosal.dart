@@ -1,8 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:logistic_management_staff/models/dispatch_model.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:logistic_management_staff/constants/enums.dart';
+import 'package:logistic_management_staff/controllers/delivery_controller.dart';
+import 'package:logistic_management_staff/controllers/pickup_controller.dart';
+import 'package:logistic_management_staff/models/assigned_response_model.dart';
 import 'package:logistic_management_staff/models/pickup_response_model.dart';
+import 'package:logistic_management_staff/widgets/dialogs/bottom_dialog.dart';
+import 'package:logistic_management_staff/widgets/dialogs/loading_dialog.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../constants/colors.dart';
@@ -15,12 +22,12 @@ import 'map_view.dart';
 class AvailableOrderDetailModal extends StatelessWidget {
   final bool isPickOff;
   final PickupDataModel pickup;
-  final DispatchModel dispatch;
+  final AssignedModel assign;
 
   const AvailableOrderDetailModal({
     Key? key,
     required this.pickup,
-    required this.dispatch,
+    required this.assign,
     this.isPickOff = true,
   }) : super(key: key);
 
@@ -94,14 +101,14 @@ class AvailableOrderDetailModal extends StatelessWidget {
                                     isPickOff
                                         ? pickup.senderLat ??
                                             '27.688250415756407'
-                                        : dispatch.senderLat ??
+                                        : assign.senderLat ??
                                             '27.688250415756407',
                                   ),
                                   double.parse(
                                     isPickOff
                                         ? pickup.senderLon ??
                                             '85.33557353207128'
-                                        : dispatch.senderLon ??
+                                        : assign.senderLon ??
                                             '85.33557353207128',
                                   ),
                                 ),
@@ -110,14 +117,14 @@ class AvailableOrderDetailModal extends StatelessWidget {
                                     isPickOff
                                         ? pickup.recieverLat ??
                                             '27.688250415756407'
-                                        : dispatch.recieverLat ??
+                                        : assign.recieverLat ??
                                             '27.688250415756407',
                                   ),
                                   double.parse(
                                     isPickOff
                                         ? pickup.recieverLon ??
                                             '85.33557353207128'
-                                        : dispatch.recieverLon ??
+                                        : assign.recieverLon ??
                                             '85.33557353207128',
                                   ),
                                 ),
@@ -133,19 +140,19 @@ class AvailableOrderDetailModal extends StatelessWidget {
                       title: 'Name: ',
                       value: isPickOff
                           ? '${pickup.senderName}'
-                          : '${dispatch.senderName}',
+                          : '${assign.senderName}',
                     ),
                     DetailRow(
                       title: 'Address: ',
                       value: isPickOff
                           ? '${pickup.senderAddress}'
-                          : '${dispatch.senderAddress}',
+                          : '${assign.senderAddress}',
                     ),
                     DetailRow(
                       title: 'Mobile Number: ',
                       value: isPickOff
                           ? '${pickup.senderMobileno}'
-                          : '${dispatch.senderMobileno}',
+                          : '${assign.senderMobileno}',
                     ),
                     DetailRow(
                       title: 'Email: ',
@@ -166,7 +173,7 @@ class AvailableOrderDetailModal extends StatelessWidget {
                         onTab: () {
                           launch(
                             'tel: '
-                            '${isPickOff ? pickup.senderMobileno : dispatch.senderMobileno}',
+                            '${isPickOff ? pickup.senderMobileno : assign.senderMobileno}',
                           );
                         },
                       ),
@@ -177,19 +184,19 @@ class AvailableOrderDetailModal extends StatelessWidget {
                       title: 'Name: ',
                       value: isPickOff
                           ? '${pickup.recieverName}'
-                          : '${dispatch.recieverName}',
+                          : '${assign.recieverName}',
                     ),
                     DetailRow(
                       title: 'Address: ',
                       value: isPickOff
                           ? '${pickup.recieverAddress}'
-                          : '${dispatch.recieverAddress}',
+                          : '${assign.recieverAddress}',
                     ),
                     DetailRow(
                       title: 'Mobile Number: ',
                       value: isPickOff
                           ? '${pickup.recieverMobileno}'
-                          : '${dispatch.recieverMobileno}',
+                          : '${assign.recieverMobileno}',
                     ),
                     DetailRow(title: 'Email: ', value: ''),
                     Align(
@@ -207,7 +214,7 @@ class AvailableOrderDetailModal extends StatelessWidget {
                         onTab: () {
                           launch(
                             'tel: '
-                            '${isPickOff ? pickup.recieverMobileno : dispatch.recieverMobileno}',
+                            '${isPickOff ? pickup.recieverMobileno : assign.recieverMobileno}',
                           );
                         },
                       ),
@@ -227,16 +234,16 @@ class AvailableOrderDetailModal extends StatelessWidget {
                             value: '${pickup.pickupTime}',
                           )
                         : Container(),
-                    !isPickOff
-                        ? DetailRow(
-                            title: 'Delivery Date: ',
-                            value: '${dispatch.dropoffDate}',
-                          )
-                        : Container(),
+                    // !isPickOff
+                    //     ? DetailRow(
+                    //         title: 'Delivery Date: ',
+                    //         value: '${assign. ?? ''}',
+                    //       )
+                    //     : Container(),
                     !isPickOff
                         ? DetailRow(
                             title: 'Delivery Time: ',
-                            value: '${dispatch.dropoffTime}',
+                            value: '${assign.dropoffTime}',
                           )
                         : Container(),
                     Align(
@@ -244,14 +251,23 @@ class AvailableOrderDetailModal extends StatelessWidget {
                       child: GeneralButton(
                         color: BUTTON_BLUE,
                         child: Text(
-                          'DELIVERED / PICKED UP',
+                          pickup.id != null
+                              ? 'Pick Up'
+                              : assign.status == 'Completed'
+                                  ? '${assign.status}'
+                                  : 'Deliver',
+                          // 'DELIVERED / PICKED UP',
                           style: TextStyle(
                             color: TEXT_WHITE,
                             fontSize: DETAILS_TEXT - 2,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        onTab: () {},
+                        onTab: () {
+                          pickup.id != null
+                              ? _pickup(context)
+                              : _dropOff(context);
+                        },
                       ),
                     ),
                     SizedBox(height: BASE_PADDING),
@@ -263,5 +279,77 @@ class AvailableOrderDetailModal extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  _pickup(BuildContext context) async {
+    final progressDialog = getProgressDialog(context: context);
+    progressDialog.show(useSafeArea: false);
+
+    bool b = await context.read<PickupController>().pickupPackage(
+          packageID: pickup.id ?? 0,
+        );
+
+    progressDialog.dismiss();
+
+    if (b) {
+      showBottomDialog(
+        context: context,
+        dialogType: DialogType.SUCCESS,
+        title: 'Success',
+        message: 'You have successfully picked up package.',
+      );
+      Navigator.pop(context);
+    } else {
+      showBottomDialog(
+        context: context,
+        dialogType: DialogType.ERROR,
+        title: 'Error',
+        message: 'Oops! Some thing went wrong. Please try again.',
+      );
+    }
+  }
+
+  _dropOff(BuildContext context) async {
+    if (assign.status == 'Completed') {
+      return;
+    }
+
+    final progressDialog = getProgressDialog(context: context);
+    progressDialog.show(useSafeArea: false);
+
+    final ImagePicker _picker = ImagePicker();
+    final XFile? photo = await _picker.pickImage(
+      source: ImageSource.camera,
+    );
+
+    if (photo == null) {
+      progressDialog.dismiss();
+      return;
+    }
+
+    bool b = await context.read<DeliveryController>().deliverPackage(
+          packageID: assign.id ?? 0,
+          dispatchID: assign.dispatchId ?? 0,
+          imagePath: photo.path,
+        );
+
+    progressDialog.dismiss();
+
+    if (b) {
+      showBottomDialog(
+        context: context,
+        dialogType: DialogType.SUCCESS,
+        title: 'Success',
+        message: 'You have successfully delivered package.',
+      );
+      Navigator.pop(context);
+    } else {
+      showBottomDialog(
+        context: context,
+        dialogType: DialogType.ERROR,
+        title: 'Error',
+        message: 'Oops! Some thing went wrong. Please try again.',
+      );
+    }
   }
 }

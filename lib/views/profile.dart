@@ -10,6 +10,7 @@ import '../widgets/custom_input.dart';
 import '../widgets/detail_row.dart';
 import '../widgets/header.dart';
 import '../widgets/profile_info_heading.dart';
+import 'history.dart';
 import 'login.dart';
 
 class Profile extends StatefulWidget {
@@ -124,7 +125,14 @@ class _ProfileState extends State<Profile> {
                       SizedBox(height: BASE_PADDING / 2),
                       CustomButton(
                         title: 'View History',
-                        onTab: () {},
+                        onTab: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (cxt) => HistoryView(),
+                            ),
+                          );
+                        },
                       ),
                       SizedBox(height: BASE_PADDING / 2),
                       CustomButton(

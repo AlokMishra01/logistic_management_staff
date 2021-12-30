@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:logistic_management_staff/models/dispatch_model.dart';
+import 'package:logistic_management_staff/models/assigned_response_model.dart';
 import 'package:logistic_management_staff/models/pickup_response_model.dart';
 import 'package:logistic_management_staff/views/available_order_detail_mosal.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -12,12 +12,12 @@ import '../../widgets/detail_row.dart';
 class OrderListItem extends StatelessWidget {
   final bool isPickOff;
   final PickupDataModel pickup;
-  final DispatchModel dispatch;
+  final AssignedModel assign;
 
   const OrderListItem({
     Key? key,
     required this.pickup,
-    required this.dispatch,
+    required this.assign,
     this.isPickOff = true,
   }) : super(key: key);
 
@@ -47,7 +47,7 @@ class OrderListItem extends StatelessWidget {
                         title: "Time",
                         value: isPickOff
                             ? "${pickup.pickupTime}"
-                            : "${dispatch.dropoffTime}",
+                            : "${assign.dropoffTime}",
                       ),
                       Text(
                         '',
@@ -62,19 +62,19 @@ class OrderListItem extends StatelessWidget {
                         title: "Customer Name",
                         value: isPickOff
                             ? "${pickup.senderName}"
-                            : "${dispatch.recieverName}",
+                            : "${assign.recieverName}",
                       ),
                       DetailRow(
                         title: "Address",
                         value: isPickOff
                             ? "${pickup.recieverAddress}"
-                            : "${dispatch.recieverAddress}",
+                            : "${assign.recieverAddress}",
                       ),
                       DetailRow(
                         title: "Contact",
                         value: isPickOff
                             ? "${pickup.senderMobileno}"
-                            : "${dispatch.recieverMobileno}",
+                            : "${assign.recieverMobileno}",
                       ),
                     ],
                   ),
@@ -88,7 +88,7 @@ class OrderListItem extends StatelessWidget {
                       onPressed: () {
                         isPickOff
                             ? launch('tel: ${pickup.senderMobileno}')
-                            : launch('tel: ${dispatch.recieverMobileno}');
+                            : launch('tel: ${assign.recieverMobileno}');
                       },
                     ),
                   ),
@@ -104,7 +104,7 @@ class OrderListItem extends StatelessWidget {
                     child: Text(
                       isPickOff
                           ? "${pickup.packageWeight} Kg."
-                          : "${dispatch.packageWeight} Kg.",
+                          : "${assign.packageWeight} Kg.",
                       textAlign: TextAlign.start,
                       style: TextStyle(
                         fontSize: DETAILS_TEXT,
@@ -119,7 +119,7 @@ class OrderListItem extends StatelessWidget {
                         context: (context),
                         builder: (_) => AvailableOrderDetailModal(
                           pickup: isPickOff ? pickup : PickupDataModel(),
-                          dispatch: isPickOff ? DispatchModel() : dispatch,
+                          assign: isPickOff ? AssignedModel() : assign,
                           isPickOff: isPickOff,
                         ),
                         isScrollControlled: false,
@@ -138,7 +138,9 @@ class OrderListItem extends StatelessWidget {
                     fit: FlexFit.tight,
                     flex: 1,
                     child: Text(
-                      isPickOff ? 'NRs. ${pickup.packagePrice ?? 0.0}' : 'N/a',
+                      isPickOff
+                          ? 'NRs. ${pickup.packagePrice ?? 0.0}'
+                          : 'NRs. ${assign.packagePrice ?? 0.0}',
                       textAlign: TextAlign.end,
                       style: TextStyle(
                         fontSize: DETAILS_TEXT,
@@ -174,7 +176,7 @@ class OrderListItem extends StatelessWidget {
                 context: (context),
                 builder: (_) => AvailableOrderDetailModal(
                   pickup: isPickOff ? pickup : PickupDataModel(),
-                  dispatch: isPickOff ? DispatchModel() : dispatch,
+                  assign: isPickOff ? AssignedModel() : assign,
                   isPickOff: isPickOff,
                 ),
                 isScrollControlled: false,

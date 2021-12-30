@@ -5,4 +5,5 @@ class APIConstants {
   static String deliveryList = 'staff/delivered/list';
   static String postPackagePickup = 'staff/package/pickup';
   static String postPackageDeliver = 'staff/package/deliver';
+  static String assignedList = 'staff/assigned/list';
 }

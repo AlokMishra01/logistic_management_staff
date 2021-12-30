@@ -35,7 +35,7 @@ class _SplashState extends State<Splash> {
   }
 
   _checkLogin() {
-    Timer(Duration(seconds: 2), () async {
+    Timer(const Duration(seconds: 2), () async {
       if (await PreferenceService.service.isLogin) {
         Navigator.pushReplacement(
           context,

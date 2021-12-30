@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:logistic_management_staff/models/dispatch_model.dart';
+import 'package:logistic_management_staff/models/assigned_response_model.dart';
+import 'package:logistic_management_staff/models/pickup_response_model.dart';
 import 'package:logistic_management_staff/widgets/order_list_item.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 import '../constants/colors.dart';
 import '../constants/values.dart';
@@ -13,6 +14,8 @@ import '../widgets/header.dart';
 import '../widgets/order_type_bar.dart';
 
 class AvailableOrders extends StatefulWidget {
+  const AvailableOrders({Key? key}) : super(key: key);
+
   @override
   _AvailableOrdersState createState() => _AvailableOrdersState();
 }
@@ -26,7 +29,7 @@ class _AvailableOrdersState extends State<AvailableOrders> {
     final delivery = context.watch<DeliveryController>();
     return Column(
       children: [
-        SizedBox(height: BASE_PADDING),
+        const SizedBox(height: BASE_PADDING),
         Header(
           title: 'Available Order',
           trailing: Padding(
@@ -34,7 +37,7 @@ class _AvailableOrdersState extends State<AvailableOrders> {
             child: CircleAvatar(
               backgroundColor: FIELD_BACKGROUND,
               child: IconButton(
-                icon: Icon(CupertinoIcons.search),
+                icon: const Icon(CupertinoIcons.search),
                 color: BUTTON_BLUE,
                 onPressed: () {
                   Navigator.push(
@@ -83,17 +86,23 @@ class _AvailableOrdersState extends State<AvailableOrders> {
         ),
         Expanded(
           child: RefreshIndicator(
-            onRefresh: () =>
-                _selected == 0 ? pickup.getPendingPickups() : () {},
-            // : delivery.getPendingPickups(),
+            onRefresh: () => _selected == 0
+                ? pickup.getPendingPickups()
+                : delivery.getAssigned(),
             child: ListView.separated(
-              physics: AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.only(bottom: 60.0),
-              itemCount: _selected == 0 ? pickup.pendingPickups.length : 0,
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.only(bottom: 60.0),
+              itemCount: _selected == 0
+                  ? pickup.pendingPickups.length
+                  : delivery.assignedList.length,
               // : delivery.dispatches.length,
-              separatorBuilder: (_, i) => SizedBox(height: BASE_PADDING),
+              separatorBuilder: (_, i) => const SizedBox(height: BASE_PADDING),
               itemBuilder: (_, i) {
-                final p = pickup.pendingPickups[i];
+                PickupDataModel p = _selected == 0
+                    ? pickup.pendingPickups[i]
+                    : PickupDataModel();
+                AssignedModel a =
+                    _selected == 0 ? AssignedModel() : delivery.assignedList[i];
                 // final d =
                 //     _selected == 0 ? DispatchModel() : delivery.dispatches[i];
                 return Column(
@@ -102,7 +111,7 @@ class _AvailableOrdersState extends State<AvailableOrders> {
                   children: [
                     OrderListItem(
                       pickup: p,
-                      dispatch: DispatchModel(),
+                      assign: a,
                       isPickOff: _selected == 0,
                     ),
                   ],

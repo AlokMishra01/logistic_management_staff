@@ -32,28 +32,26 @@ class PickupService {
     }
   }
 
-  postPackagePickup({
+  Future<bool> postPackagePickup({
     required DioController dio,
     required int packageId,
-    required int dispatchId,
   }) async {
     try {
       Response response = await dio.dioClient.post(
         APIConstants.postPackagePickup,
         data: {
           'package_id': packageId,
-          'dispatch_id': dispatchId,
         },
       );
 
       if (response.statusCode == 200) {
-        return response.data;
+        return (response.data['status'] ?? false) as bool;
       } else {
-        return null;
+        return false;
       }
     } on Exception catch (e, s) {
       log('Post Package Pickup Error!', stackTrace: s, error: e);
-      return '';
+      return false;
     }
   }
 }
