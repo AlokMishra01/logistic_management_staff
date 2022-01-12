@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:logistic_management_staff/models/pickup_response_model.dart';
+import 'package:pretty_json/pretty_json.dart';
 
 import '../constants/api_constants.dart';
 import '../controllers/dio_controller.dart';
@@ -37,13 +38,16 @@ class PickupService {
     required int packageId,
   }) async {
     try {
+      // var formData = FormData.fromMap({
+      //   'package_id': packageId,
+      // });
       Response response = await dio.dioClient.post(
         APIConstants.postPackagePickup,
         data: {
           'package_id': packageId,
         },
       );
-
+      log('Post Package Pickup Data!: ${prettyJson(response.data)}');
       if (response.statusCode == 200) {
         return (response.data['status'] ?? false) as bool;
       } else {

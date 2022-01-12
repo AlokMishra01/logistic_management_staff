@@ -84,9 +84,9 @@ class _ProfileState extends State<Profile> {
                         value: '${auth.userModel?.name}',
                       ),
                       DetailRow(
-                        title: 'Address: ',
+                        title: 'Experience: ',
                         // value: '${auth.userModel?.address}',
-                        value: 'N/a',
+                        value: '${auth.userModel?.experience ?? 'N/a'} Years',
                       ),
                       DetailRow(
                         title: 'Mobile Number: ',

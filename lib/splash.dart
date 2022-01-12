@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/providerient.dart';
 
 import '../controllers/authentication_controller.dart';
 import 'constants/colors.dart' as colors;
@@ -29,22 +29,24 @@ class _SplashState extends State<Splash> {
     context.read<DioController>();
     context.read<AuthenticationController>();
     context.read<GeoLocatorController>();
-    context.read<PickupController>();
-    context.read<DeliveryController>();
+    context.read<PickupController>().getPickedUpPickups();
+    context.read<PickupController>().getPendingPickups();
+    context.read<DeliveryController>().getAssigned();
+    context.read<DeliveryController>().getDelivered();
     _checkLogin();
   }
 
   _checkLogin() {
-    Timer(const Duration(seconds: 2), () async {
+    Timer(const Duration(seconds: 3), () async {
       if (await PreferenceService.service.isLogin) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (cxt) => MainPage()),
+          MaterialPageRoute(builder: (cxt) => const MainPage()),
         );
       } else {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (cxt) => Login()),
+          MaterialPageRoute(builder: (cxt) => const Login()),
         );
       }
     });
@@ -52,7 +54,7 @@ class _SplashState extends State<Splash> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: colors.TEXT_WHITE,
     );
   }

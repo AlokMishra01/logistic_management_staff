@@ -1,5 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:logistic_management_staff/controllers/connectivity_controller.dart';
+import 'package:logistic_management_staff/controllers/delivery_controller.dart';
+import 'package:logistic_management_staff/controllers/dio_controller.dart';
+import 'package:logistic_management_staff/controllers/geo_locator_controller.dart';
+import 'package:logistic_management_staff/controllers/pickup_controller.dart';
 import 'package:provider/provider.dart';
 
 import '../constants/colors.dart' as colors;
@@ -155,6 +160,14 @@ class _LoginState extends State<Login> {
     progressDialog.dismiss();
 
     if (result.isEmpty) {
+      context.read<ConnectivityController>();
+      context.read<DioController>();
+      context.read<AuthenticationController>();
+      context.read<GeoLocatorController>();
+      context.read<PickupController>().getPickedUpPickups();
+      context.read<PickupController>().getPendingPickups();
+      context.read<DeliveryController>().getAssigned();
+      context.read<DeliveryController>().getDelivered();
       showBottomDialog(
         context: context,
         dialogType: DialogType.SUCCESS,

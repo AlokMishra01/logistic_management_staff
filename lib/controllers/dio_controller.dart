@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:logistic_management_staff/controllers/authentication_controller.dart';
 import 'package:logistic_management_staff/services/preference_service.dart';
+import 'package:logistic_management_staff/views/login.dart';
 import 'package:pretty_json/pretty_json.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +16,9 @@ class DioController with ChangeNotifier {
 
   DioController(this._context) {
     _dio.options.baseUrl = APIConstants.baseUrl;
+    // _dio.options.headers.addAll({
+    //   'Accept': '*/*',
+    // });
     _dio.options.headers.addAll({
       'Accept': 'application/json',
       'Content-Type': 'application/json',
@@ -31,6 +35,7 @@ class DioController with ChangeNotifier {
   _onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     log(prettyJson(options.uri.toString()), name: 'API Request Url');
     log(prettyJson(options.headers), name: 'API Request Headers');
+    // log(prettyJson(options.data), name: 'API Request Data');
     String token = await PreferenceService.service.token;
     if (token.isNotEmpty) {
       options.headers.addAll(
@@ -44,31 +49,31 @@ class DioController with ChangeNotifier {
     log(prettyJson(response.data), name: 'API Response Data');
     if (response.data['status_code'] == 401) {
       log('Logging Out User', name: 'API 401 Error!');
-      final auth = _context.read<AuthenticationController>();
-      if (auth.isLoggedIn) {
-        _context.read<AuthenticationController>().logOut();
-        // Navigator.pushAndRemoveUntil(
-        //   _context,
-        //   MaterialPageRoute(
-        //     builder: (_) => Login(),
-        //   ),
-        //   (route) => false,
-        // );
-      }
+      _context.read<AuthenticationController>().logOut();
+      Navigator.pushAndRemoveUntil(
+        _context,
+        MaterialPageRoute(
+          builder: (_) => Login(),
+        ),
+        (route) => false,
+      );
     }
     return handler.next(response);
   }
 
   _onError(DioError error, ErrorInterceptorHandler handler) async {
     log(prettyJson(error.type.toString()), name: 'API Error');
-    // if (error.response!.statusCode == 401) {
-    //   final model = _context.read<LoginWithRollingNexusController>().tokenModel;
-    //   if (model is AccessTokenModel) {
-    //     // Todo: Implement refresh token and logout
-    //     // if refresh failed then logout
-    //     await _context.read<LoginWithRollingNexusController>().logout();
-    //   }
-    // }
+    log(prettyJson(error.response?.data ?? ''), name: 'API Error Response');
+    if (error.response!.statusCode == 401) {
+      _context.read<AuthenticationController>().logOut();
+      Navigator.pushAndRemoveUntil(
+        _context,
+        MaterialPageRoute(
+          builder: (_) => Login(),
+        ),
+        (route) => false,
+      );
+    }
     return handler.next(error);
   }
 

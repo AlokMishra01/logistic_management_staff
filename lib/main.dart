@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 
 import 'app.dart';
+import 'controllers/authentication_controller.dart';
+import 'controllers/connectivity_controller.dart';
+import 'controllers/delivery_controller.dart';
+import 'controllers/dio_controller.dart';
+import 'controllers/geo_locator_controller.dart';
+import 'controllers/pickup_controller.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,5 +20,58 @@ void main() {
   // } catch (e, s) {
   //   log('In App Update Error!', error: e, stackTrace: s);
   // }
-  runApp(MyApp());
+
+  Socket socket = io(
+      'https://trackingapi.logistics.intopros.com.np',
+      OptionBuilder()
+          .setTransports(['websocket']) // for Flutter or Dart VM
+          .disableAutoConnect() // disable auto-connection
+          .setExtraHeaders({'foo': 'bar'}) // optional
+          .build());
+  socket.connect();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (cxt) => ConnectivityController(),
+        ),
+        ChangeNotifierProvider(
+          create: (cxt) => DioController(cxt),
+        ),
+        ChangeNotifierProxyProvider2<ConnectivityController, DioController,
+            AuthenticationController>(
+          create: (cxt) => AuthenticationController(null, null),
+          update: (cxt, conn, dio, auth) => AuthenticationController(conn, dio),
+        ),
+        ChangeNotifierProxyProvider2<ConnectivityController,
+            AuthenticationController, GeoLocatorController>(
+          create: (cxt) => GeoLocatorController(null, null),
+          update: (cxt, conn, auth, geo) => GeoLocatorController(
+            conn,
+            auth,
+          ),
+        ),
+        ChangeNotifierProxyProvider3<ConnectivityController, DioController,
+            AuthenticationController, PickupController>(
+          create: (cxt) => PickupController(null, null, null),
+          update: (cxt, conn, dio, auth, pickup) => PickupController(
+            conn,
+            dio,
+            auth,
+          ),
+        ),
+        ChangeNotifierProxyProvider3<ConnectivityController, DioController,
+            AuthenticationController, DeliveryController>(
+          create: (cxt) => DeliveryController(null, null, null),
+          update: (cxt, conn, dio, auth, pickup) => DeliveryController(
+            conn,
+            dio,
+            auth,
+          ),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }

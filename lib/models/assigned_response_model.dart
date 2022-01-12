@@ -183,7 +183,7 @@ class AssignedModel {
     _pickupTime = json['pickup_time'];
     _dropoffTime = json['dropoff_time'];
     _fragile = json['fragile'];
-    _packagePrice = json['package_price'];
+    _packagePrice = double.parse((json['package_price'] ?? 0.0).toString());
     _express = json['express'];
     _status = json['status'];
   }

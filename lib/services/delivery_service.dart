@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:logistic_management_staff/models/assigned_response_model.dart';
+import 'package:pretty_json/pretty_json.dart';
 
 import '../constants/api_constants.dart';
 import '../controllers/dio_controller.dart';
@@ -63,7 +64,7 @@ class DeliveryService {
       FormData formData = FormData.fromMap({
         'package_id': packageId,
         'dispatch_id': dispatchId,
-        'file': await MultipartFile.fromFile(imagePath),
+        'delivered_image': await MultipartFile.fromFile(imagePath),
       });
 
       Response response = await dio.dioClient.post(
@@ -71,6 +72,9 @@ class DeliveryService {
         data: formData,
       );
 
+      log(
+        'Post Package Delivery Response => ${response.statusCode}: ${prettyJson(response.data)}',
+      );
       if (response.statusCode == 200) {
         return (response.data['status'] ?? false) as bool;
       } else {

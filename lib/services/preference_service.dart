@@ -35,6 +35,10 @@ class PreferenceService {
 
   clearPreferences() async {
     await _initSharedPreferences();
+    _sharedPreferences?.setBool(
+      preferences.IS_LOGIN,
+      false,
+    );
     _sharedPreferences?.clear();
   }
 

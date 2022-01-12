@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:logistic_management_staff/models/assigned_response_model.dart';
 import 'package:logistic_management_staff/models/pickup_response_model.dart';
 import 'package:logistic_management_staff/views/available_order_detail_mosal.dart';
@@ -30,8 +31,12 @@ class OrderListItem extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: BASE_PADDING / 1.25),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(RADIUS),
-            color: GREEN,
-            // color: (isactive) ? GREEN : BLUE_BACKGROUND,
+            // color: GREEN,
+            color: pickup.id != null
+                ? BLUE_BACKGROUND
+                : assign.status == 'Completed'
+                    ? GREEN
+                    : BLUE_BACKGROUND,
           ),
           child: Column(
             children: [
@@ -46,8 +51,8 @@ class OrderListItem extends StatelessWidget {
                       DetailRow(
                         title: "Time",
                         value: isPickOff
-                            ? "${pickup.pickupTime}"
-                            : "${assign.dropoffTime}",
+                            ? Jiffy(pickup.pickupTime, "H:m:s").jm
+                            : Jiffy(assign.dropoffTime, "H:m:s").jm,
                       ),
                       Text(
                         '',
