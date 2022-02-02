@@ -27,20 +27,20 @@ class OrderListItem extends StatelessWidget {
     return Stack(
       children: [
         Container(
-          margin: EdgeInsets.symmetric(horizontal: BASE_PADDING),
-          padding: EdgeInsets.symmetric(horizontal: BASE_PADDING / 1.25),
+          margin: const EdgeInsets.symmetric(horizontal: BASE_PADDING),
+          padding: const EdgeInsets.symmetric(horizontal: BASE_PADDING / 1.25),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(RADIUS),
             // color: GREEN,
             color: pickup.id != null
                 ? BLUE_BACKGROUND
-                : assign.status == 'Completed'
+                : assign.status == 'Delivered'
                     ? GREEN
                     : BLUE_BACKGROUND,
           ),
           child: Column(
             children: [
-              SizedBox(height: BASE_PADDING / 1.25),
+              const SizedBox(height: BASE_PADDING / 1.25),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,10 +51,14 @@ class OrderListItem extends StatelessWidget {
                       DetailRow(
                         title: "Time",
                         value: isPickOff
-                            ? Jiffy(pickup.pickupTime, "H:m:s").jm
-                            : Jiffy(assign.dropoffTime, "H:m:s").jm,
+                            ? pickup.pickupTime == null
+                                ? ''
+                                : Jiffy(pickup.pickupTime, "H:m:s").jm
+                            : assign.dropoffTime == null
+                                ? ''
+                                : Jiffy(assign.dropoffTime, "H:m:s").jm,
                       ),
-                      Text(
+                      const Text(
                         '',
                         style: TextStyle(
                           fontSize: DETAILS_TEXT + 2,
@@ -86,7 +90,7 @@ class OrderListItem extends StatelessWidget {
                   CircleAvatar(
                     backgroundColor: TEXT_BLUE,
                     child: IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         CupertinoIcons.phone_fill,
                         color: TEXT_WHITE,
                       ),
@@ -111,7 +115,7 @@ class OrderListItem extends StatelessWidget {
                           ? "${pickup.packageWeight} Kg."
                           : "${assign.packageWeight} Kg.",
                       textAlign: TextAlign.start,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: DETAILS_TEXT,
                         fontWeight: FontWeight.w500,
                         height: 1,
@@ -129,14 +133,14 @@ class OrderListItem extends StatelessWidget {
                         ),
                         isScrollControlled: false,
                         backgroundColor: TEXT_WHITE,
-                        shape: RoundedRectangleBorder(
+                        shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.vertical(
                             top: Radius.circular(RADIUS),
                           ),
                         ),
                       );
                     },
-                    icon: Icon(CupertinoIcons.ellipsis),
+                    icon: const Icon(CupertinoIcons.ellipsis),
                     color: TEXT_BLUE,
                   ),
                   Flexible(
@@ -147,7 +151,7 @@ class OrderListItem extends StatelessWidget {
                           ? 'NRs. ${pickup.packagePrice ?? 0.0}'
                           : 'NRs. ${assign.packagePrice ?? 0.0}',
                       textAlign: TextAlign.end,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: DETAILS_TEXT,
                         fontWeight: FontWeight.w500,
                         height: 1,
@@ -186,14 +190,14 @@ class OrderListItem extends StatelessWidget {
                 ),
                 isScrollControlled: false,
                 backgroundColor: TEXT_WHITE,
-                shape: RoundedRectangleBorder(
+                shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.vertical(
                     top: Radius.circular(RADIUS),
                   ),
                 ),
               );
             },
-            icon: Icon(CupertinoIcons.ellipsis),
+            icon: const Icon(CupertinoIcons.ellipsis),
             color: Colors.transparent,
           ),
         ),

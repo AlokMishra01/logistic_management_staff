@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:provider/providerient.dart';
+import 'package:logistic_management_staff/controllers/route_controller.dart';
+import 'package:provider/provider.dart';
 
 import '../controllers/authentication_controller.dart';
 import 'constants/colors.dart' as colors;
@@ -29,6 +30,7 @@ class _SplashState extends State<Splash> {
     context.read<DioController>();
     context.read<AuthenticationController>();
     context.read<GeoLocatorController>();
+    context.read<RouteController>();
     context.read<PickupController>().getPickedUpPickups();
     context.read<PickupController>().getPendingPickups();
     context.read<DeliveryController>().getAssigned();
@@ -37,7 +39,7 @@ class _SplashState extends State<Splash> {
   }
 
   _checkLogin() {
-    Timer(const Duration(seconds: 3), () async {
+    Timer(const Duration(seconds: 5), () async {
       if (await PreferenceService.service.isLogin) {
         Navigator.pushReplacement(
           context,
@@ -54,8 +56,29 @@ class _SplashState extends State<Splash> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    final size = MediaQuery.of(context).size;
+    return Scaffold(
       backgroundColor: colors.TEXT_WHITE,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const SizedBox(height: 88.0, width: double.infinity),
+          Image.asset(
+            'images/icon.png',
+            fit: BoxFit.cover,
+            width: size.width / 2,
+            height: size.width / 4,
+          ),
+          const Padding(
+            padding: EdgeInsets.all(32.0),
+            child: SizedBox(
+              height: 24.0,
+              width: 24.0,
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

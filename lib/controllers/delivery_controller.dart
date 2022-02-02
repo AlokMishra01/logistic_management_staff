@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logistic_management_staff/models/assigned_response_model.dart';
+import 'package:logistic_management_staff/models/dispatch_response_model.dart';
+import 'package:logistic_management_staff/models/search_response_model.dart';
 
 import '../services/delivery_service.dart';
 import 'authentication_controller.dart';
@@ -20,6 +22,7 @@ class DeliveryController with ChangeNotifier {
   ) {
     getAssigned();
     getDelivered();
+    getDispatched();
   }
 
   getDelivered({bool init = true}) async {
@@ -94,6 +97,26 @@ class DeliveryController with ChangeNotifier {
     }
   }
 
+  getDispatched() async {
+    if (_dioController == null) {
+      return;
+    }
+
+    final result = await _deliveryService.getPickUpDispatchList(
+      dio: _dioController!,
+    );
+
+    if (result is DispatchResponseModel) {
+      _dispatchedList
+        ..clear()
+        ..addAll(result.data?.dispatches ?? []);
+      _dispatchPickupList
+        ..clear()
+        ..addAll(result.data?.pickedUp ?? []);
+      notifyListeners();
+    }
+  }
+
   Future<bool> deliverPackage({
     required int packageID,
     required int dispatchID,
@@ -122,6 +145,34 @@ class DeliveryController with ChangeNotifier {
     return b;
   }
 
+  searchPackage({
+    required String query,
+    bool isDispatch = true,
+  }) async {
+    if (_dioController == null) {
+      return false;
+    }
+
+    if (!(_connectivityController?.hasInternet ?? false)) {
+      return false;
+    }
+
+    _searching = true;
+    notifyListeners();
+
+    final result = await _deliveryService.searchPackageList(
+        dio: _dioController!, query: query, isDispatch: isDispatch);
+
+    if (result is SearchResponseModel) {
+      _searchedPackages
+        ..clear()
+        ..addAll(result.data ?? []);
+    }
+
+    _searching = false;
+    notifyListeners();
+  }
+
   // Delivered
   int _pageDeliveredAt = 1;
   bool _canDeliveredLoadMore = true;
@@ -133,4 +184,18 @@ class DeliveryController with ChangeNotifier {
   bool _canAssignedLoadMore = true;
   List<AssignedModel> _assignedList = [];
   List<AssignedModel> get assignedList => _assignedList;
+
+  // Dispatched
+  List<AssignedModel> _dispatchedList = [];
+  List<AssignedModel> get dispatchedList => _dispatchedList;
+
+  // Dispatc Pickup
+  List<AssignedModel> _dispatchPickupList = [];
+  List<AssignedModel> get dispatchPickupList => _dispatchPickupList;
+
+  // Search Package
+  bool _searching = false;
+  bool get searching => _searching;
+  List<AssignedModel> _searchedPackages = [];
+  List<AssignedModel> get searchedPackages => _searchedPackages;
 }

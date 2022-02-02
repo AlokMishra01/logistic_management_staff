@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:logistic_management_staff/models/assigned_response_model.dart';
+import 'package:logistic_management_staff/models/dispatch_response_model.dart';
+import 'package:logistic_management_staff/models/search_response_model.dart';
 import 'package:pretty_json/pretty_json.dart';
 
 import '../constants/api_constants.dart';
@@ -54,6 +56,27 @@ class DeliveryService {
     }
   }
 
+  Future<DispatchResponseModel?> getPickUpDispatchList({
+    required DioController dio,
+    int limit = 100,
+  }) async {
+    try {
+      Response response = await dio.dioClient.get(
+        'staff/assgined/pickedup_dispatch?limit=$limit',
+      );
+      log('Get Dispatch Response!: ${prettyJson(response.data)}');
+      if (response.statusCode == 200) {
+        final data = DispatchResponseModel.fromJson(response.data);
+        return data;
+      } else {
+        return null;
+      }
+    } on Exception catch (e, s) {
+      log('Get Dispatch Error!', stackTrace: s, error: e);
+      return null;
+    }
+  }
+
   Future<bool> postPackageDelivery({
     required DioController dio,
     required int packageId,
@@ -83,6 +106,32 @@ class DeliveryService {
     } on Exception catch (e, s) {
       log('Post Package Delivery Error!', stackTrace: s, error: e);
       return false;
+    }
+  }
+
+  Future<SearchResponseModel?> searchPackageList({
+    required DioController dio,
+    required String query,
+    bool isDispatch = true,
+  }) async {
+    try {
+      Response response = await dio.dioClient.post(
+        'staff/package/search',
+        data: {
+          'type': isDispatch ? 'Dispatch' : 'Picked Up',
+          'keyword': query,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = SearchResponseModel.fromJson(response.data);
+        return data;
+      } else {
+        return null;
+      }
+    } on Exception catch (e, s) {
+      log('Search Package Error!', stackTrace: s, error: e);
+      return null;
     }
   }
 }

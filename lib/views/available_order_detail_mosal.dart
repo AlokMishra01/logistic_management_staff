@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:logistic_management_staff/constants/enums.dart';
@@ -22,7 +21,6 @@ import '../../constants/values.dart';
 import '../../widgets/detail_row.dart';
 import '../../widgets/general_button.dart';
 import '../../widgets/profile_info_heading.dart';
-import 'map_view.dart';
 
 class AvailableOrderDetailModal extends StatefulWidget {
   final bool isPickOff;
@@ -85,14 +83,14 @@ class _AvailableOrderDetailModalState extends State<AvailableOrderDetailModal> {
                         color: Colors.green,
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
+                          children: const [
+                            Icon(
                               CupertinoIcons.map,
                               color: TEXT_WHITE,
                               size: 20,
                             ),
-                            const SizedBox(width: 8),
-                            const Text(
+                            SizedBox(width: 8),
+                            Text(
                               'View Route',
                               style: TextStyle(
                                 color: TEXT_WHITE,
@@ -103,45 +101,50 @@ class _AvailableOrderDetailModalState extends State<AvailableOrderDetailModal> {
                           ],
                         ),
                         onTab: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => MapPage(
-                                latLngFrom: LatLng(
-                                  double.parse(
-                                    widget.isPickOff
-                                        ? widget.pickup.senderLat ??
-                                            '27.688250415756407'
-                                        : widget.assign.senderLat ??
-                                            '27.688250415756407',
-                                  ),
-                                  double.parse(
-                                    widget.isPickOff
-                                        ? widget.pickup.senderLon ??
-                                            '85.33557353207128'
-                                        : widget.assign.senderLon ??
-                                            '85.33557353207128',
-                                  ),
-                                ),
-                                latLngTo: LatLng(
-                                  double.parse(
-                                    widget.isPickOff
-                                        ? widget.pickup.recieverLat ??
-                                            '27.688250415756407'
-                                        : widget.assign.recieverLat ??
-                                            '27.688250415756407',
-                                  ),
-                                  double.parse(
-                                    widget.isPickOff
-                                        ? widget.pickup.recieverLon ??
-                                            '85.33557353207128'
-                                        : widget.assign.recieverLon ??
-                                            '85.33557353207128',
-                                  ),
-                                ),
-                              ),
-                            ),
+                          launch(
+                            'https://www.google.com/maps/dir/'
+                            '${widget.pickup.senderLat},${widget.pickup.senderLon}/'
+                            '${widget.pickup.recieverLat},${widget.pickup.recieverLon}',
                           );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (_) => MapPage(
+                          //       latLngFrom: LatLng(
+                          //         double.parse(
+                          //           widget.isPickOff
+                          //               ? widget.pickup.senderLat ??
+                          //                   '27.688250415756407'
+                          //               : widget.assign.senderLat ??
+                          //                   '27.688250415756407',
+                          //         ),
+                          //         double.parse(
+                          //           widget.isPickOff
+                          //               ? widget.pickup.senderLon ??
+                          //                   '85.33557353207128'
+                          //               : widget.assign.senderLon ??
+                          //                   '85.33557353207128',
+                          //         ),
+                          //       ),
+                          //       latLngTo: LatLng(
+                          //         double.parse(
+                          //           widget.isPickOff
+                          //               ? widget.pickup.recieverLat ??
+                          //                   '27.688250415756407'
+                          //               : widget.assign.recieverLat ??
+                          //                   '27.688250415756407',
+                          //         ),
+                          //         double.parse(
+                          //           widget.isPickOff
+                          //               ? widget.pickup.recieverLon ??
+                          //                   '85.33557353207128'
+                          //               : widget.assign.recieverLon ??
+                          //                   '85.33557353207128',
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ),
+                          // );
                         },
                       ),
                     ),
@@ -187,14 +190,14 @@ class _AvailableOrderDetailModalState extends State<AvailableOrderDetailModal> {
                             onTab: () {
                               widget.isPickOff
                                   ? launch(
-                                      'https://www.google.com/maps/@'
+                                      'https://www.google.com/maps/dir/?api=1&destination='
                                       '${widget.pickup.senderLat},'
-                                      '${widget.pickup.senderLon},15z',
+                                      '${widget.pickup.senderLon}',
                                     )
                                   : launch(
-                                      'https://www.google.com/maps/@'
+                                      'https://www.google.com/maps/dir/?api=1&destination='
                                       '${widget.assign.senderLat},'
-                                      '${widget.assign.senderLon},15z',
+                                      '${widget.assign.senderLon}',
                                     );
                               // Navigator.push(
                               //   context,
@@ -286,14 +289,14 @@ class _AvailableOrderDetailModalState extends State<AvailableOrderDetailModal> {
                             onTab: () {
                               widget.isPickOff
                                   ? launch(
-                                      'https://www.google.com/maps/@'
+                                      'https://www.google.com/maps/dir/?api=1&destination='
                                       '${widget.pickup.recieverLat},'
-                                      '${widget.pickup.recieverLon},15z',
+                                      '${widget.pickup.recieverLon}',
                                     )
                                   : launch(
-                                      'https://www.google.com/maps/@'
+                                      'https://www.google.com/maps/dir/?api=1&destination='
                                       '${widget.assign.recieverLat},'
-                                      '${widget.assign.recieverLon},15z',
+                                      '${widget.assign.recieverLon}',
                                     );
                               // Navigator.push(
                               //   context,
@@ -360,7 +363,9 @@ class _AvailableOrderDetailModalState extends State<AvailableOrderDetailModal> {
                     widget.isPickOff
                         ? DetailRow(
                             title: 'Pickup Time: ',
-                            value: Jiffy(widget.pickup.pickupTime, "H:m:s").jm,
+                            value: widget.pickup.pickupTime == null
+                                ? ''
+                                : Jiffy(widget.pickup.pickupTime, "H:m:s").jm,
                           )
                         : Container(),
                     // !isPickOff
@@ -382,8 +387,8 @@ class _AvailableOrderDetailModalState extends State<AvailableOrderDetailModal> {
                         child: Text(
                           widget.pickup.id != null
                               ? 'Pick Up'
-                              : widget.assign.status == 'Completed'
-                                  ? 'Delivered'
+                              : widget.assign.status == 'Delivered'
+                                  ? widget.assign.status ?? ''
                                   : 'Deliver',
                           // 'DELIVERED / PICKED UP',
                           style: const TextStyle(
@@ -439,7 +444,7 @@ class _AvailableOrderDetailModalState extends State<AvailableOrderDetailModal> {
   }
 
   _dropOff() async {
-    if (widget.assign.status == 'Completed') {
+    if (widget.assign.status == 'Delivered') {
       return;
     }
 

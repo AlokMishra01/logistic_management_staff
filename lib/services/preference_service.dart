@@ -33,6 +33,15 @@ class PreferenceService {
     );
   }
 
+  setUserProfile(UserModel model) async {
+    await _initSharedPreferences();
+
+    _sharedPreferences?.setString(
+      preferences.STAFF,
+      jsonEncode(model.toJson()),
+    );
+  }
+
   clearPreferences() async {
     await _initSharedPreferences();
     _sharedPreferences?.setBool(

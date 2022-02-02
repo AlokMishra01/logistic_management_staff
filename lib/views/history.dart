@@ -21,203 +21,237 @@ class HistoryView extends StatelessWidget {
   Widget build(BuildContext context) {
     final delivery = context.watch<DeliveryController>();
     return Scaffold(
-      body: Column(
-        children: [
-          const SizedBox(height: BASE_PADDING),
-          const Header(
-            title: 'History',
-            backButton: true,
-          ),
-          Expanded(
-            child: RefreshIndicator(
-              onRefresh: () => delivery.getDelivered(),
-              child: ListView.separated(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.only(bottom: 60.0),
-                itemCount: delivery.deliveredList.length,
-                // : delivery.dispatches.length,
-                separatorBuilder: (_, i) =>
-                    const SizedBox(height: BASE_PADDING),
-                itemBuilder: (_, i) {
-                  final item = delivery.deliveredList[i];
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Stack(
+      body: SafeArea(
+        child: Column(
+          children: [
+            const Header(
+              title: 'History',
+              backButton: true,
+            ),
+            if (delivery.deliveredList.isNotEmpty)
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: () => delivery.getDelivered(),
+                  child: ListView.separated(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.only(bottom: 60.0),
+                    itemCount: delivery.deliveredList.length,
+                    // : delivery.dispatches.length,
+                    separatorBuilder: (_, i) =>
+                        const SizedBox(height: BASE_PADDING),
+                    itemBuilder: (_, i) {
+                      final item = delivery.deliveredList[i];
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                              horizontal: BASE_PADDING,
-                            ),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: BASE_PADDING / 1.25,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(RADIUS),
-                              color: GREEN,
-                              // color: (isactive) ? GREEN : BLUE_BACKGROUND,
-                            ),
-                            child: Column(
-                              children: [
-                                SizedBox(height: BASE_PADDING / 1.25),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                          Stack(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: BASE_PADDING,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: BASE_PADDING / 1.25,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(RADIUS),
+                                  color: GREEN,
+                                  // color: (isactive) ? GREEN : BLUE_BACKGROUND,
+                                ),
+                                child: Column(
                                   children: [
-                                    Column(
+                                    const SizedBox(height: BASE_PADDING / 1.25),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        DetailRow(
-                                          title: "Time",
-                                          value: "${item.dropoffTime}",
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            DetailRow(
+                                              title: "Time",
+                                              value: "${item.dropoffTime}",
+                                            ),
+                                            const Text(
+                                              '',
+                                              style: TextStyle(
+                                                fontSize: DETAILS_TEXT + 2,
+                                                color: TEXT_SECONDARY,
+                                                fontWeight: FontWeight.w400,
+                                                height: 1.5,
+                                              ),
+                                            ),
+                                            DetailRow(
+                                              title: "Customer Name",
+                                              value: "${item.recieverName}",
+                                            ),
+                                            DetailRow(
+                                              title: "Address",
+                                              value: "${item.recieverAddress}",
+                                            ),
+                                            DetailRow(
+                                              title: "Contact",
+                                              value: "${item.recieverMobileno}",
+                                            ),
+                                          ],
                                         ),
-                                        Text(
-                                          '',
-                                          style: TextStyle(
-                                            fontSize: DETAILS_TEXT + 2,
-                                            color: TEXT_SECONDARY,
-                                            fontWeight: FontWeight.w400,
-                                            height: 1.5,
+                                        CircleAvatar(
+                                          backgroundColor: TEXT_BLUE,
+                                          child: IconButton(
+                                            icon: const Icon(
+                                              CupertinoIcons.phone_fill,
+                                              color: TEXT_WHITE,
+                                            ),
+                                            onPressed: () {
+                                              launch(
+                                                  'tel: ${item.recieverMobileno}');
+                                            },
                                           ),
-                                        ),
-                                        DetailRow(
-                                          title: "Customer Name",
-                                          value: "${item.recieverName}",
-                                        ),
-                                        DetailRow(
-                                          title: "Address",
-                                          value: "${item.recieverAddress}",
-                                        ),
-                                        DetailRow(
-                                          title: "Contact",
-                                          value: "${item.recieverMobileno}",
                                         ),
                                       ],
                                     ),
-                                    CircleAvatar(
-                                      backgroundColor: TEXT_BLUE,
-                                      child: IconButton(
-                                        icon: Icon(
-                                          CupertinoIcons.phone_fill,
-                                          color: TEXT_WHITE,
-                                        ),
-                                        onPressed: () {
-                                          launch(
-                                              'tel: ${item.recieverMobileno}');
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Flexible(
-                                      fit: FlexFit.tight,
-                                      flex: 1,
-                                      child: Text(
-                                        "${item.packageWeight} Kg.",
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                          fontSize: DETAILS_TEXT,
-                                          fontWeight: FontWeight.w500,
-                                          height: 1,
-                                        ),
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: () {
-                                        showModalBottomSheet(
-                                          context: (context),
-                                          builder: (_) => _modalContent(
-                                            context,
-                                            item,
-                                          ),
-                                          isScrollControlled: false,
-                                          backgroundColor: TEXT_WHITE,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.vertical(
-                                              top: Radius.circular(RADIUS),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Flexible(
+                                          fit: FlexFit.tight,
+                                          flex: 1,
+                                          child: Text(
+                                            "${item.packageWeight} Kg.",
+                                            textAlign: TextAlign.start,
+                                            style: const TextStyle(
+                                              fontSize: DETAILS_TEXT,
+                                              fontWeight: FontWeight.w500,
+                                              height: 1,
                                             ),
                                           ),
-                                        );
-                                      },
-                                      icon: Icon(CupertinoIcons.ellipsis),
-                                      color: TEXT_BLUE,
-                                    ),
-                                    Flexible(
-                                      fit: FlexFit.tight,
-                                      flex: 1,
-                                      child: Text(
-                                        'NRs. ${item.packagePrice ?? 0.0}',
-                                        textAlign: TextAlign.end,
-                                        style: TextStyle(
-                                          fontSize: DETAILS_TEXT,
-                                          fontWeight: FontWeight.w500,
-                                          height: 1,
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            showModalBottomSheet(
+                                              context: (context),
+                                              builder: (_) => _modalContent(
+                                                context,
+                                                item,
+                                              ),
+                                              isScrollControlled: false,
+                                              backgroundColor: TEXT_WHITE,
+                                              shape:
+                                                  const RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.vertical(
+                                                  top: Radius.circular(RADIUS),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          icon: const Icon(
+                                              CupertinoIcons.ellipsis),
+                                          color: TEXT_BLUE,
+                                        ),
+                                        Flexible(
+                                          fit: FlexFit.tight,
+                                          flex: 1,
+                                          child: Text(
+                                            'NRs. ${item.packagePrice ?? 0.0}',
+                                            textAlign: TextAlign.end,
+                                            style: const TextStyle(
+                                              fontSize: DETAILS_TEXT,
+                                              fontWeight: FontWeight.w500,
+                                              height: 1,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                              // if (!isactive)
+                              // Positioned(
+                              //   top: 0,
+                              //   bottom: 0,
+                              //   left: 0,
+                              //   right: 0,
+                              //   child: Material(
+                              //     borderRadius: BorderRadius.circular(RADIUS),
+                              //     color: TEXT_WHITE.withOpacity(0.5),
+                              //   ),
+                              // ),
+                              // if (!isactive)
+                              Positioned(
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                child: IconButton(
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                      context: (context),
+                                      builder: (_) =>
+                                          _modalContent(context, item),
+                                      isScrollControlled: false,
+                                      backgroundColor: TEXT_WHITE,
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(RADIUS),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                          // if (!isactive)
-                          // Positioned(
-                          //   top: 0,
-                          //   bottom: 0,
-                          //   left: 0,
-                          //   right: 0,
-                          //   child: Material(
-                          //     borderRadius: BorderRadius.circular(RADIUS),
-                          //     color: TEXT_WHITE.withOpacity(0.5),
-                          //   ),
-                          // ),
-                          // if (!isactive)
-                          Positioned(
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            child: IconButton(
-                              onPressed: () {
-                                showModalBottomSheet(
-                                  context: (context),
-                                  builder: (_) => _modalContent(context, item),
-                                  isScrollControlled: false,
-                                  backgroundColor: TEXT_WHITE,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(RADIUS),
-                                    ),
-                                  ),
-                                );
-                              },
-                              icon: Icon(CupertinoIcons.ellipsis),
-                              color: Colors.transparent,
-                            ),
+                                    );
+                                  },
+                                  icon: const Icon(CupertinoIcons.ellipsis),
+                                  color: Colors.transparent,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
-                      ),
-                    ],
-                  );
-                },
+                      );
+                    },
+                  ),
+                ),
               ),
-            ),
-          ),
-        ],
+            if (delivery.deliveredList.isEmpty)
+              Expanded(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(BASE_PADDING * 2),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          'No deliveries so far.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: TEXT_SECONDARY,
+                            fontSize: SUB_HEADER_TEXT,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => delivery.getDelivered(),
+                          icon: const Icon(Icons.refresh_rounded),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
 
   _modalContent(BuildContext context, AssignedModel item) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: TEXT_WHITE,
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(RADIUS),
@@ -228,14 +262,14 @@ class HistoryView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: BASE_PADDING),
+            const SizedBox(height: BASE_PADDING),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
                   width: 100,
                   height: 4,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: TEXT_SECONDARY_LIGHT,
                     borderRadius: BorderRadius.all(
                       Radius.circular(12.0),
@@ -244,10 +278,10 @@ class HistoryView extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: BASE_PADDING),
+            const SizedBox(height: BASE_PADDING),
             Expanded(
               child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -257,7 +291,7 @@ class HistoryView extends StatelessWidget {
                         color: Colors.green,
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
-                          children: [
+                          children: const [
                             Icon(
                               CupertinoIcons.map,
                               color: TEXT_WHITE,
@@ -301,8 +335,8 @@ class HistoryView extends StatelessWidget {
                         },
                       ),
                     ),
-                    SizedBox(height: BASE_PADDING),
-                    ProfileInfoHeading(title: 'Sender Inforamtion'),
+                    const SizedBox(height: BASE_PADDING),
+                    const ProfileInfoHeading(title: 'Sender Inforamtion'),
                     DetailRow(
                       title: 'Name: ',
                       value: '${item.senderName}',
@@ -315,7 +349,7 @@ class HistoryView extends StatelessWidget {
                       title: 'Mobile Number: ',
                       value: '${item.senderMobileno}',
                     ),
-                    DetailRow(
+                    const DetailRow(
                       title: 'Email: ',
                       value: '',
                     ),
@@ -323,7 +357,7 @@ class HistoryView extends StatelessWidget {
                       alignment: Alignment.centerRight,
                       child: GeneralButton(
                         color: FIELD_BACKGROUND,
-                        child: Text(
+                        child: const Text(
                           'CALL SENDER',
                           style: TextStyle(
                             color: TEXT_BLUE,
@@ -339,8 +373,8 @@ class HistoryView extends StatelessWidget {
                         },
                       ),
                     ),
-                    SizedBox(height: BASE_PADDING),
-                    ProfileInfoHeading(title: 'Reciever Inforamtion'),
+                    const SizedBox(height: BASE_PADDING),
+                    const ProfileInfoHeading(title: 'Reciever Inforamtion'),
                     DetailRow(
                       title: 'Name: ',
                       value: '${item.recieverName}',
@@ -353,12 +387,12 @@ class HistoryView extends StatelessWidget {
                       title: 'Mobile Number: ',
                       value: '${item.recieverMobileno}',
                     ),
-                    DetailRow(title: 'Email: ', value: ''),
+                    const DetailRow(title: 'Email: ', value: ''),
                     Align(
                       alignment: Alignment.centerRight,
                       child: GeneralButton(
                         color: FIELD_BACKGROUND,
-                        child: Text(
+                        child: const Text(
                           'CALL RECIVER',
                           style: TextStyle(
                             color: TEXT_BLUE,
@@ -374,8 +408,9 @@ class HistoryView extends StatelessWidget {
                         },
                       ),
                     ),
-                    SizedBox(height: BASE_PADDING),
-                    ProfileInfoHeading(title: 'Delivery / Pickup Inforamtion'),
+                    const SizedBox(height: BASE_PADDING),
+                    const ProfileInfoHeading(
+                        title: 'Delivery / Pickup Inforamtion'),
                     Align(
                       alignment: Alignment.centerRight,
                       child: GeneralButton(
@@ -383,7 +418,7 @@ class HistoryView extends StatelessWidget {
                         child: Text(
                           '${item.status}',
                           // 'DELIVERED / PICKED UP',
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: TEXT_WHITE,
                             fontSize: DETAILS_TEXT - 2,
                             fontWeight: FontWeight.w600,
@@ -392,7 +427,7 @@ class HistoryView extends StatelessWidget {
                         onTab: () {},
                       ),
                     ),
-                    SizedBox(height: BASE_PADDING),
+                    const SizedBox(height: BASE_PADDING),
                   ],
                 ),
               ),

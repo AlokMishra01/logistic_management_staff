@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/colors.dart' as colors;
@@ -6,14 +5,14 @@ import '../constants/values.dart' as values;
 
 class HeaderText extends StatelessWidget {
   final String text;
-  final IconData icon;
-  final VoidCallback onIconTab;
+  final IconData? icon;
+  final VoidCallback? onIconTab;
 
   const HeaderText({
     Key? key,
     required this.text,
-    required this.icon,
-    required this.onIconTab,
+    this.icon,
+    this.onIconTab,
   }) : super(key: key);
 
   @override
@@ -23,7 +22,7 @@ class HeaderText extends StatelessWidget {
       children: [
         Text(
           text,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: values.HEADER_TEXT,
             color: colors.TEXT_BLUE,

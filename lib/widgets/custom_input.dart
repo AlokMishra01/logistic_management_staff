@@ -17,6 +17,7 @@ class CustomInput extends StatelessWidget {
   final bool enabled;
   final int? maxLines;
   final int? minLines;
+  final Function(String)? onChanged;
 
   const CustomInput({
     Key? key,
@@ -31,6 +32,7 @@ class CustomInput extends StatelessWidget {
     this.enabled = true,
     this.maxLines,
     this.minLines,
+    this.onChanged,
   }) : super(key: key);
 
   @override
@@ -100,6 +102,7 @@ class CustomInput extends StatelessWidget {
       keyboardType: type,
       obscureText: obscureText,
       controller: controller,
+      onChanged: onChanged,
     );
   }
 }

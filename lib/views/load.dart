@@ -1,69 +1,76 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logistic_management_staff/constants/colors.dart';
 import 'package:logistic_management_staff/constants/values.dart';
+import 'package:logistic_management_staff/controllers/delivery_controller.dart';
 import 'package:logistic_management_staff/widgets/header.dart';
+import 'package:provider/provider.dart';
+
 import '../widgets/load_list_item.dart';
-import '../widgets/load_header.dart';
+import 'search_page.dart';
 
 class Load extends StatelessWidget {
+  const Load({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    final delivery = context.watch<DeliveryController>();
     return Column(
       children: [
-        SizedBox(height: BASE_PADDING),
         Header(
           title: 'Load',
           trailing: Padding(
             padding: const EdgeInsets.symmetric(horizontal: BASE_PADDING),
-            child: CircleAvatar(
-              backgroundColor: FIELD_BACKGROUND,
-              child: IconButton(
-                icon: Icon(CupertinoIcons.plus),
-                color: BUTTON_BLUE,
-                onPressed: () {},
-              ),
+            child: IconButton(
+              icon: const Icon(Icons.search_rounded),
+              color: BUTTON_BLUE,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const SearchPage(),
+                  ),
+                );
+              },
             ),
           ),
         ),
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: BASE_PADDING),
-          padding: const EdgeInsets.all(BASE_PADDING),
-          decoration: BoxDecoration(
-            color: BUTTON_BLUE,
-            borderRadius: BorderRadius.circular(RADIUS),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              LoadHeader(
-                title: "Capacity",
-                value: "500 Kg",
-              ),
-              LoadHeader(
-                title: "Occupied",
-                value: "100 Kg.",
-              ),
-              LoadHeader(
-                title: "Item Count",
-                value: "50",
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: ListView.separated(
-            physics: BouncingScrollPhysics(),
-            itemCount: 3,
-            separatorBuilder: (_, i) => SizedBox(height: BASE_PADDING),
-            itemBuilder: (_, i) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (i == 0)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
+        // Container(
+        //   margin: const EdgeInsets.symmetric(horizontal: BASE_PADDING),
+        //   padding: const EdgeInsets.all(BASE_PADDING),
+        //   decoration: BoxDecoration(
+        //     color: BUTTON_BLUE,
+        //     borderRadius: BorderRadius.circular(RADIUS),
+        //   ),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       LoadHeader(
+        //         title: "Capacity",
+        //         value: "500 Kg",
+        //       ),
+        //       LoadHeader(
+        //         title: "Occupied",
+        //         value: "100 Kg.",
+        //       ),
+        //       LoadHeader(
+        //         title: "Item Count",
+        //         value: "50",
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        if (delivery.dispatchedList.isNotEmpty)
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () => delivery.getDispatched(),
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(width: double.infinity),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(
                         horizontal: BASE_PADDING,
                         vertical: BASE_PADDING / 2,
                       ),
@@ -76,13 +83,58 @@ class Load extends StatelessWidget {
                         ),
                       ),
                     ),
-                  LoadListItem(),
-                  if (i == 2) SizedBox(height: HEADER_TEXT * 2),
-                ],
-              );
-            },
+                    for (var p in delivery.dispatchPickupList)
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          LoadListItem(
+                            model: p,
+                            isDispatch: false,
+                          ),
+                          const SizedBox(height: BASE_PADDING)
+                        ],
+                      ),
+                    for (var d in delivery.dispatchedList)
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          LoadListItem(
+                            model: d,
+                          ),
+                          const SizedBox(height: BASE_PADDING)
+                        ],
+                      ),
+                  ],
+                ),
+              ),
+            ),
           ),
-        ),
+        if (delivery.dispatchedList.isEmpty)
+          Expanded(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(BASE_PADDING * 2),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'No loads for today right now.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: TEXT_SECONDARY,
+                        fontSize: SUB_HEADER_TEXT,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => delivery.getDispatched(),
+                      icon: const Icon(Icons.refresh_rounded),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }

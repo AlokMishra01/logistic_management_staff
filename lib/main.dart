@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logistic_management_staff/controllers/route_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -56,6 +57,15 @@ void main() {
             AuthenticationController, PickupController>(
           create: (cxt) => PickupController(null, null, null),
           update: (cxt, conn, dio, auth, pickup) => PickupController(
+            conn,
+            dio,
+            auth,
+          ),
+        ),
+        ChangeNotifierProxyProvider3<ConnectivityController, DioController,
+            AuthenticationController, RouteController>(
+          create: (cxt) => RouteController(null, null, null),
+          update: (cxt, conn, dio, auth, route) => RouteController(
             conn,
             dio,
             auth,

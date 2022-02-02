@@ -1,59 +1,57 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:logistic_management_staff/models/assigned_response_model.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import '../../constants/colors.dart';
 import '../../constants/values.dart';
 import '../../widgets/detail_row.dart';
 import '../views/load_detail_model.dart';
 
 class LoadListItem extends StatelessWidget {
+  final AssignedModel model;
+  final bool isDispatch;
+
+  const LoadListItem({
+    Key? key,
+    required this.model,
+    this.isDispatch = true,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: BASE_PADDING),
-      padding: EdgeInsets.symmetric(horizontal: BASE_PADDING / 1.25),
+      margin: const EdgeInsets.symmetric(horizontal: BASE_PADDING),
+      padding: const EdgeInsets.symmetric(horizontal: BASE_PADDING / 1.25),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(RADIUS),
-        color: FIELD_BACKGROUND,
+        color: isDispatch
+            ? BUTTON_GREEN.withOpacity(0.1)
+            : BUTTON_BLUE.withOpacity(0.1),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: BASE_PADDING / 1.25),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  DetailRow(
-                    title: "Size: ",
-                    value: "10 x 10 ft",
-                  ),
-                  DetailRow(
-                    title: "Customer Name: ",
-                    value: "Birendra Thapa",
-                  ),
-                  DetailRow(
-                    title: "Address: ",
-                    value: "Bhaktapur",
-                  ),
-                  DetailRow(
-                    title: "Contact: ",
-                    value: "+977 - 9878989898",
-                  ),
-                ],
-              ),
-              CircleAvatar(
-                backgroundColor: RED,
-                child: IconButton(
-                  icon: Icon(
-                    CupertinoIcons.clear_thick,
-                    color: TEXT_WHITE,
-                  ),
-                  onPressed: () {},
-                ),
-              ),
-            ],
+          const SizedBox(height: BASE_PADDING / 1.25),
+          DetailRow(
+            title: "Size: ",
+            value: "${model.packageSize}",
+          ),
+          DetailRow(
+            title: "Customer Name: ",
+            value: isDispatch ? "${model.recieverName}" : "${model.senderName}",
+          ),
+          DetailRow(
+            title: "Address: ",
+            value: isDispatch
+                ? "${model.recieverAddress}"
+                : "${model.senderAddress}",
+          ),
+          DetailRow(
+            title: "Contact: ",
+            value: isDispatch
+                ? "${model.recieverMobileno}"
+                : "${model.senderMobileno}",
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -65,8 +63,20 @@ class LoadListItem extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(CupertinoIcons.map),
+                    onPressed: () {
+                      isDispatch
+                          ? launch(
+                              'https://www.google.com/maps/dir/?api=1&destination='
+                              '${model.recieverLat},'
+                              '${model.recieverLon}',
+                            )
+                          : launch(
+                              'https://www.google.com/maps/dir/?api=1&destination='
+                              '${model.senderLat},'
+                              '${model.senderLon}',
+                            );
+                    },
+                    icon: const Icon(CupertinoIcons.map),
                     color: TEXT_BLUE,
                   ),
                 ),
@@ -75,26 +85,29 @@ class LoadListItem extends StatelessWidget {
                 onPressed: () {
                   showModalBottomSheet(
                     context: (context),
-                    builder: (_) => LoadDetailModal(),
+                    builder: (_) => LoadDetailModal(
+                      model: model,
+                      isDispatch: isDispatch,
+                    ),
                     isScrollControlled: false,
                     backgroundColor: TEXT_WHITE,
-                    shape: RoundedRectangleBorder(
+                    shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.vertical(
                         top: Radius.circular(RADIUS),
                       ),
                     ),
                   );
                 },
-                icon: Icon(CupertinoIcons.ellipsis),
+                icon: const Icon(CupertinoIcons.ellipsis),
                 color: TEXT_BLUE,
               ),
               Flexible(
                 fit: FlexFit.tight,
                 flex: 1,
                 child: Text(
-                  "15 Kg.",
+                  (model.packageWeight ?? 'N/a').toString(),
                   textAlign: TextAlign.end,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: DETAILS_TEXT,
                     fontWeight: FontWeight.w500,
                     height: 1,
