@@ -21,6 +21,7 @@ import '../../constants/values.dart';
 import '../../widgets/detail_row.dart';
 import '../../widgets/general_button.dart';
 import '../../widgets/profile_info_heading.dart';
+import 'signature_page.dart';
 
 class AvailableOrderDetailModal extends StatefulWidget {
   final bool isPickOff;
@@ -450,6 +451,70 @@ class _AvailableOrderDetailModalState extends State<AvailableOrderDetailModal> {
 
     // Navigator.pop(context);
 
+    _chooseOption();
+  }
+
+  _chooseOption() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(RADIUS),
+        ),
+      ),
+      builder: (_) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: BASE_PADDING),
+              ListTile(
+                leading: const Icon(
+                  Icons.camera_alt_rounded,
+                  color: TEXT_BLUE,
+                ),
+                title: const Text(
+                  'Take photo of package delivery',
+                  style: TextStyle(
+                    color: TEXT_BLUE,
+                    fontWeight: FontWeight.bold,
+                    fontSize: TITLE_TEXT,
+                  ),
+                ),
+                horizontalTitleGap: 0.0,
+                onTap: () async {
+                  Navigator.pop(context);
+                  _takePhotoOfDelivery();
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  CupertinoIcons.signature,
+                  color: TEXT_BLUE,
+                ),
+                title: const Text(
+                  'Take customer signature for package delivery',
+                  style: TextStyle(
+                    color: TEXT_BLUE,
+                    fontWeight: FontWeight.bold,
+                    fontSize: TITLE_TEXT,
+                  ),
+                ),
+                horizontalTitleGap: 0.0,
+                onTap: () async {
+                  Navigator.pop(context);
+                  _takeCustomerSignature();
+                },
+              ),
+              const SizedBox(height: BASE_PADDING),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  _takePhotoOfDelivery() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? photo = await _picker.pickImage(
       source: ImageSource.camera,
@@ -522,6 +587,89 @@ class _AvailableOrderDetailModalState extends State<AvailableOrderDetailModal> {
           ),
           const SizedBox(height: 8.0),
         ],
+      ),
+    );
+  }
+
+  _takeCustomerSignature() async {
+    File? photo;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (cxt) => SignaturePage(
+          onDone: (image) {
+            photo = image;
+
+            if (photo == null) {
+              return;
+            }
+
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: TEXT_WHITE,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(RADIUS),
+                ),
+              ),
+              builder: (_) => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(RADIUS),
+                      child: Image.file(
+                        File(photo?.path ?? ''),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 1,
+                          child: SizedBox(
+                            height: 48.0,
+                            child: CustomButtonOutline(
+                              title: 'Cancel',
+                              color: Colors.redAccent,
+                              onTab: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8.0),
+                        Flexible(
+                          fit: FlexFit.tight,
+                          flex: 1,
+                          child: SizedBox(
+                            height: 48.0,
+                            child: CustomButton(
+                              title: 'Okay',
+                              onTab: () {
+                                Navigator.pop(context);
+                                _save(
+                                    context: context,
+                                    imagePath: photo?.path ?? '');
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

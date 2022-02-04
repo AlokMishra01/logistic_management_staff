@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:logistic_management_staff/controllers/route_controller.dart';
 import 'package:provider/provider.dart';
-import 'package:socket_io_client/socket_io_client.dart';
+
+// import 'package:socket_io_client/socket_io_client.dart';
 
 import 'app.dart';
 import 'controllers/authentication_controller.dart';
@@ -22,14 +23,14 @@ void main() {
   //   log('In App Update Error!', error: e, stackTrace: s);
   // }
 
-  Socket socket = io(
-      'https://trackingapi.logistics.intopros.com.np',
-      OptionBuilder()
-          .setTransports(['websocket']) // for Flutter or Dart VM
-          .disableAutoConnect() // disable auto-connection
-          .setExtraHeaders({'foo': 'bar'}) // optional
-          .build());
-  socket.connect();
+  // Socket socket = io(
+  //     'https://trackingapi.logistics.intopros.com.np',
+  //     OptionBuilder()
+  //         .setTransports(['websocket']) // for Flutter or Dart VM
+  //         .disableAutoConnect() // disable auto-connection
+  //         .setExtraHeaders({'foo': 'bar'}) // optional
+  //         .build());
+  // socket.connect();
 
   runApp(
     MultiProvider(

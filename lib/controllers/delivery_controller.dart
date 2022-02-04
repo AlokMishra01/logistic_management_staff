@@ -138,8 +138,9 @@ class DeliveryController with ChangeNotifier {
     );
 
     if (b) {
-      getAssigned();
-      getDelivered();
+      await getAssigned();
+      await getDelivered();
+      await getDispatched();
     }
 
     return b;
