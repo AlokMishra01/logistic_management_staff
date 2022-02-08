@@ -31,6 +31,13 @@ class RouteController with ChangeNotifier {
       return;
     }
 
+    if (_loadingVehicle) {
+      return;
+    }
+
+    _loadingVehicle = true;
+    notifyListeners();
+
     final result = await _routeService.getVehicle(dio: _dioController!);
 
     if (result?.data?.route?.routePoints != null) {
@@ -46,6 +53,7 @@ class RouteController with ChangeNotifier {
     }
 
     _vehicle = result;
+    _loadingVehicle = false;
     notifyListeners();
   }
 
@@ -67,6 +75,8 @@ class RouteController with ChangeNotifier {
   // Dispatc Pickup
   GetVehicleResponseModel? _vehicle;
   GetVehicleResponseModel? get vehicle => _vehicle;
+  bool _loadingVehicle = false;
+  bool get loadingVehicle => _loadingVehicle;
 
   // points
   Set<Marker> _markers = <Marker>{};

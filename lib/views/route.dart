@@ -7,6 +7,8 @@ import 'package:logistic_management_staff/controllers/geo_locator_controller.dar
 import 'package:logistic_management_staff/controllers/route_controller.dart';
 import 'package:provider/provider.dart';
 
+import '../constants/colors.dart';
+import '../constants/values.dart';
 import '../widgets/header.dart';
 
 class MapRoutes extends StatefulWidget {
@@ -18,7 +20,7 @@ class MapRoutes extends StatefulWidget {
 
 class _MapRoutesState extends State<MapRoutes> {
   // String _selected = "Kathmandu";
-  Completer<GoogleMapController> _controller = Completer();
+  final Completer<GoogleMapController> _controller = Completer();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,25 @@ class _MapRoutesState extends State<MapRoutes> {
 
     return Column(
       children: [
-        const Header(title: 'Route'),
+        Header(
+          title: 'Route',
+          trailing: route.loadingVehicle
+              ? const Padding(
+                  padding: EdgeInsets.all(BASE_PADDING),
+                  child: SizedBox(
+                    height: 24.0,
+                    width: 24.0,
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              : IconButton(
+                  onPressed: () => route.getVechile(),
+                  icon: const Icon(
+                    Icons.wifi_protected_setup_rounded,
+                    color: BUTTON_BLUE,
+                  ),
+                ),
+        ),
         // Padding(
         //   padding: const EdgeInsets.symmetric(
         //     horizontal: BASE_PADDING,

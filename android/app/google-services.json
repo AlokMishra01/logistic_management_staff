@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "692417989039",
+    "project_id": "logistics-1134b",
+    "storage_bucket": "logistics-1134b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:692417989039:android:e42dab33ab12220cb5875a",
+        "android_client_info": {
+          "package_name": "com.intopros.logistic_management_staff"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "692417989039-4f8v32kmpt9ji4h75jh6g4vr07o1g5oi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZIYpugg_4w_YGUi4LOTN97MNbw9NB6mI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "692417989039-4f8v32kmpt9ji4h75jh6g4vr07o1g5oi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

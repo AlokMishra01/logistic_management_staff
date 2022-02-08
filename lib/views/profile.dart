@@ -80,191 +80,195 @@ class _ProfileState extends State<Profile> {
           ),
         ),
         Expanded(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                const SizedBox(height: BASE_PADDING),
-                Center(
-                  child: Stack(
-                    children: [
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(
-                          auth.userModel?.photo ?? '',
+          child: RefreshIndicator(
+            onRefresh: () => route.getVechile(),
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  const SizedBox(height: BASE_PADDING),
+                  Center(
+                    child: Stack(
+                      children: [
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            auth.userModel?.photo ?? '',
+                          ),
+                          radius: size.width * 0.2,
+                          backgroundColor: TEXT_BLUE.withOpacity(0.2),
                         ),
-                        radius: size.width * 0.2,
-                        backgroundColor: TEXT_BLUE.withOpacity(0.2),
-                      ),
-                      Positioned(
-                        bottom: 4.0,
-                        right: 4.0,
-                        child: CircleAvatar(
-                          radius: 18.0,
-                          backgroundColor: TEXT_WHITE,
+                        Positioned(
+                          bottom: 4.0,
+                          right: 4.0,
                           child: CircleAvatar(
-                            backgroundColor: BUTTON_BLUE,
-                            radius: 16.0,
-                            child: IconButton(
-                              onPressed: () => _uploadImage(context),
-                              icon: const Icon(
-                                Icons.camera_alt_rounded,
-                                color: TEXT_WHITE,
-                                size: 16.0,
+                            radius: 18.0,
+                            backgroundColor: TEXT_WHITE,
+                            child: CircleAvatar(
+                              backgroundColor: BUTTON_BLUE,
+                              radius: 16.0,
+                              child: IconButton(
+                                onPressed: () => _uploadImage(context),
+                                icon: const Icon(
+                                  Icons.camera_alt_rounded,
+                                  color: TEXT_WHITE,
+                                  size: 16.0,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: BASE_PADDING),
-                const SizedBox(height: BASE_PADDING),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ProfileInfoHeading(
-                      title: 'Basic Information',
-                      onTab: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const ProfileUpdate(),
-                          ),
-                        );
-                      },
-                    ),
-                    ProfileDetailRow(
-                      title: 'Name',
-                      value: auth.userModel?.name ?? '',
-                    ),
-                    ProfileDetailRow(
-                      title: 'Experience',
-                      value: auth.userModel?.name == null
-                          ? ''
-                          : '${auth.userModel?.experience} Years',
-                    ),
-                    ProfileDetailRow(
-                      title: 'Mobile Number',
-                      value: auth.userModel?.phone ?? '',
-                    ),
-                    ProfileDetailRow(
-                      title: 'Email',
-                      value: auth.userModel?.email ?? '',
-                    ),
-                    const SizedBox(height: BASE_PADDING * 2),
-                    const ProfileInfoHeading(
-                      title: 'Assigned Routes',
-                    ),
-                    if (route.vehicle?.data?.route != null)
-                      Padding(
-                        padding: const EdgeInsets.all(BASE_PADDING),
-                        child: CustomInput(
-                          controller: TextEditingController(
-                            text: route.vehicle?.data?.route?.routeTitle ?? '',
-                          ),
-                          hint: route.vehicle?.data?.route?.routeTitle ?? '',
-                          enabled: false,
-                        ),
-                      ),
-                    if (route.vehicle?.data?.route == null)
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(BASE_PADDING * 2),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Text(
-                                'No assigned routes for today right now.',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: TEXT_SECONDARY,
-                                  fontSize: TITLE_TEXT + 4.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () => route.getVechile(),
-                                icon: const Icon(Icons.refresh_rounded),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    if (route.vehicle?.data?.route != null)
-                      const SizedBox(height: BASE_PADDING),
-                    const ProfileInfoHeading(title: 'Assigned Vehicle'),
-                    if (route.vehicle?.data?.vehicle != null)
-                      Padding(
-                        padding: const EdgeInsets.all(BASE_PADDING),
-                        child: CustomInput(
-                          controller: TextEditingController(
-                            text: route.vehicle?.data?.vehicle?.regNo ?? '',
-                          ),
-                          hint: route.vehicle?.data?.vehicle?.regNo ?? '',
-                          enabled: false,
-                        ),
-                      ),
-                    if (route.vehicle?.data?.vehicle == null)
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(BASE_PADDING * 2),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Text(
-                                'No assigned vehicle for today right now.',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: TEXT_SECONDARY,
-                                  fontSize: TITLE_TEXT + 4.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () => route.getVechile(),
-                                icon: const Icon(Icons.refresh_rounded),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    if (route.vehicle?.data?.vehicle != null)
-                      const SizedBox(height: BASE_PADDING),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: BASE_PADDING,
-                      ),
-                      child: CustomButton(
-                        title: 'View History',
+                  const SizedBox(height: BASE_PADDING),
+                  const SizedBox(height: BASE_PADDING),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ProfileInfoHeading(
+                        title: 'Basic Information',
                         onTab: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (cxt) => const HistoryView(),
+                              builder: (_) => const ProfileUpdate(),
                             ),
                           );
                         },
                       ),
-                    ),
-                    // SizedBox(height: BASE_PADDING / 2),
-                    // CustomButton(
-                    //   title: 'Logout',
-                    //   onTab: () {
-                    //     auth.logOut();
-                    //     Navigator.pushAndRemoveUntil(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //         builder: (_) => Login(),
-                    //       ),
-                    //       (route) => false,
-                    //     );
-                    //   },
-                    // ),
-                    const SizedBox(height: 60),
-                  ],
-                ),
-              ],
+                      ProfileDetailRow(
+                        title: 'Name',
+                        value: auth.userModel?.name ?? '',
+                      ),
+                      ProfileDetailRow(
+                        title: 'Experience',
+                        value: auth.userModel?.name == null
+                            ? ''
+                            : '${auth.userModel?.experience} Years',
+                      ),
+                      ProfileDetailRow(
+                        title: 'Mobile Number',
+                        value: auth.userModel?.phone ?? '',
+                      ),
+                      ProfileDetailRow(
+                        title: 'Email',
+                        value: auth.userModel?.email ?? '',
+                      ),
+                      const SizedBox(height: BASE_PADDING * 2),
+                      const ProfileInfoHeading(
+                        title: 'Assigned Routes',
+                      ),
+                      if (route.vehicle?.data?.route != null)
+                        Padding(
+                          padding: const EdgeInsets.all(BASE_PADDING),
+                          child: CustomInput(
+                            controller: TextEditingController(
+                              text:
+                                  route.vehicle?.data?.route?.routeTitle ?? '',
+                            ),
+                            hint: route.vehicle?.data?.route?.routeTitle ?? '',
+                            enabled: false,
+                          ),
+                        ),
+                      if (route.vehicle?.data?.route == null)
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(BASE_PADDING * 2),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Text(
+                                  'No assigned routes for today right now.',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: TEXT_SECONDARY,
+                                    fontSize: TITLE_TEXT + 4.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () => route.getVechile(),
+                                  icon: const Icon(Icons.refresh_rounded),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      if (route.vehicle?.data?.route != null)
+                        const SizedBox(height: BASE_PADDING),
+                      const ProfileInfoHeading(title: 'Assigned Vehicle'),
+                      if (route.vehicle?.data?.vehicle != null)
+                        Padding(
+                          padding: const EdgeInsets.all(BASE_PADDING),
+                          child: CustomInput(
+                            controller: TextEditingController(
+                              text: route.vehicle?.data?.vehicle?.regNo ?? '',
+                            ),
+                            hint: route.vehicle?.data?.vehicle?.regNo ?? '',
+                            enabled: false,
+                          ),
+                        ),
+                      if (route.vehicle?.data?.vehicle == null)
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(BASE_PADDING * 2),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Text(
+                                  'No assigned vehicle for today right now.',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: TEXT_SECONDARY,
+                                    fontSize: TITLE_TEXT + 4.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () => route.getVechile(),
+                                  icon: const Icon(Icons.refresh_rounded),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      if (route.vehicle?.data?.vehicle != null)
+                        const SizedBox(height: BASE_PADDING),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: BASE_PADDING,
+                        ),
+                        child: CustomButton(
+                          title: 'View History',
+                          onTab: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (cxt) => const HistoryView(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      // SizedBox(height: BASE_PADDING / 2),
+                      // CustomButton(
+                      //   title: 'Logout',
+                      //   onTab: () {
+                      //     auth.logOut();
+                      //     Navigator.pushAndRemoveUntil(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (_) => Login(),
+                      //       ),
+                      //       (route) => false,
+                      //     );
+                      //   },
+                      // ),
+                      const SizedBox(height: 60),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
