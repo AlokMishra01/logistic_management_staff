@@ -1,5 +1,7 @@
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:pretty_json/pretty_json.dart';
 
@@ -93,6 +95,44 @@ class AuthenticationService {
     } on Exception catch (e, s) {
       log('Update Image Error!', stackTrace: s, error: e);
       return '';
+    }
+  }
+
+  registerDeviceToken({
+    required DioController dio,
+    required String token,
+  }) async {
+    try {
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      String name = '';
+      String type = '';
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        type = 'Android';
+        name = androidInfo.model ?? '';
+      } else {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        type = 'iOS';
+        name = iosInfo.model ?? '';
+      }
+
+      Response response = await dio.dioClient.post(
+        'staff/device/register',
+        data: {
+          "device_type": type,
+          "device_token": token,
+          "device_name": name,
+        },
+      );
+      log(prettyJson(response.data), name: 'Token Register');
+      if (response.statusCode == 200) {
+        return response.data['status'] as bool;
+      } else {
+        return false;
+      }
+    } on Exception catch (e, s) {
+      log('Token Register Error!', stackTrace: s, error: e);
+      return false;
     }
   }
 }

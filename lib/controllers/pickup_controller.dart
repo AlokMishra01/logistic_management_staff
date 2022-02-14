@@ -95,26 +95,26 @@ class PickupController with ChangeNotifier {
     }
   }
 
-  Future<bool> pickupPackage({required int packageID}) async {
+  Future<String> pickupPackage({required int packageID}) async {
     if (_dioController == null) {
-      return false;
+      return '';
     }
 
     if (!(_connectivityController?.hasInternet ?? false)) {
-      return false;
+      return '';
     }
 
-    bool b = await _pickupService.postPackagePickup(
+    String result = await _pickupService.postPackagePickup(
       dio: _dioController!,
       packageId: packageID,
     );
 
-    if (b) {
+    if (result.isNotEmpty) {
       getPendingPickups();
       getPickedUpPickups();
     }
 
-    return b;
+    return result;
   }
 
   // Pending

@@ -33,7 +33,7 @@ class PickupService {
     }
   }
 
-  Future<bool> postPackagePickup({
+  Future<String> postPackagePickup({
     required DioController dio,
     required int packageId,
   }) async {
@@ -49,13 +49,17 @@ class PickupService {
       );
       log('Post Package Pickup Data!: ${prettyJson(response.data)}');
       if (response.statusCode == 200) {
-        return (response.data['status'] ?? false) as bool;
+        bool b = (response.data['status'] ?? false) as bool;
+        if (b) {
+          return (response.data['barcode'] ?? '') as String;
+        }
+        return '';
       } else {
-        return false;
+        return '';
       }
     } on Exception catch (e, s) {
       log('Post Package Pickup Error!', stackTrace: s, error: e);
-      return false;
+      return '';
     }
   }
 }

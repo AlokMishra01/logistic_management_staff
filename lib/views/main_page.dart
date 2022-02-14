@@ -1,10 +1,13 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:logistic_management_staff/controllers/authentication_controller.dart';
 import 'package:logistic_management_staff/views/available_orders.dart';
 import 'package:logistic_management_staff/views/load.dart';
 import 'package:logistic_management_staff/views/profile.dart';
 import 'package:logistic_management_staff/views/route.dart';
 import 'package:logistic_management_staff/widgets/dialogs/custom_dialog.dart';
+import 'package:provider/provider.dart';
 
 import '../constants/colors.dart' as colors;
 
@@ -17,6 +20,17 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _registerDevice();
+  }
+
+  _registerDevice() async {
+    String token = await FirebaseMessaging.instance.getToken() ?? '';
+    context.read<AuthenticationController>().registerDevice(token: token);
+  }
 
   @override
   Widget build(BuildContext context) {

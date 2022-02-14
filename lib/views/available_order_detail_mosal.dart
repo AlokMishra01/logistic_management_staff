@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -420,20 +421,89 @@ class _AvailableOrderDetailModalState extends State<AvailableOrderDetailModal> {
     final progressDialog = getProgressDialog(context: context);
     progressDialog.show(useSafeArea: false);
 
-    bool b = await context.read<PickupController>().pickupPackage(
-          packageID: widget.pickup.id ?? 0,
-        );
+    String result = await context
+        .read<PickupController>()
+        .pickupPackage(packageID: widget.pickup.id ?? 0);
 
     progressDialog.dismiss();
 
-    if (b) {
-      showBottomDialog(
-        context: context,
-        dialogType: DialogType.SUCCESS,
-        title: 'Success',
-        message: 'You have successfully picked up package.',
-      );
+    if (result.isNotEmpty) {
+      // showBottomDialog(
+      //   context: context,
+      //   dialogType: DialogType.SUCCESS,
+      //   title: 'Success',
+      //   message: 'You have successfully picked up package.',
+      // );
       Navigator.pop(context);
+      showModalBottomSheet(
+        context: (context),
+        builder: (_) => Column(
+          children: [
+            const SizedBox(height: BASE_PADDING),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: 100,
+                  height: 4,
+                  decoration: const BoxDecoration(
+                    color: TEXT_SECONDARY_LIGHT,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(12.0),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: BASE_PADDING),
+            const Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: BASE_PADDING * 2,
+              ),
+              child: Text(
+                'You have successfully picked up package.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: TEXT_SECONDARY,
+                  fontSize: SUB_HEADER_TEXT,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(height: BASE_PADDING),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(BASE_PADDING * 2),
+                child: CachedNetworkImage(
+                  imageUrl: result,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: BASE_PADDING * 2,
+              ),
+              child: CustomButton(
+                title: 'Print Label',
+                onTab: () {
+                  // Navigator.pop(context);
+                },
+              ),
+            ),
+            const SizedBox(height: BASE_PADDING),
+            const SizedBox(height: BASE_PADDING),
+          ],
+        ),
+        isScrollControlled: false,
+        backgroundColor: TEXT_WHITE,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(RADIUS),
+          ),
+        ),
+      );
+      // Navigator.pop(context);
     } else {
       showBottomDialog(
         context: context,

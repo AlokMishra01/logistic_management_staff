@@ -15,7 +15,7 @@ class AuthenticationController with ChangeNotifier {
   final _preferenceService = PreferenceService.service;
 
   AuthenticationController(this._connectivityController, this._dioController) {
-    if (this._connectivityController != null && this._dioController != null) {
+    if (_connectivityController != null && _dioController != null) {
       _initLogin();
     }
   }
@@ -156,6 +156,31 @@ class AuthenticationController with ChangeNotifier {
     }
 
     return b.isNotEmpty;
+  }
+
+  Future<bool> registerDevice({required String token}) async {
+    if (_connectivityController == null) {
+      return false;
+    }
+
+    if (_dioController == null) {
+      return false;
+    }
+
+    if (_userModel == null) {
+      return false;
+    }
+
+    if (!(_connectivityController?.hasInternet ?? false)) {
+      return false;
+    }
+
+    bool b = await _authenticationService.registerDeviceToken(
+      dio: _dioController!,
+      token: token,
+    );
+
+    return b;
   }
 
   /// Data
