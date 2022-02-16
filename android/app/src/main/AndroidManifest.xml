@@ -24,6 +24,10 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
+       <meta-data
+           android:name="com.google.firebase.messaging.default_notification_icon"
+           android:resource="@drawable/ikima" />
+
        <meta-data android:name="com.google.android.geo.API_KEY"
            android:value="AIzaSyBrCzJmZ8Y2lxQPVsEiYEO7LszrTgJ5nAU"/>
 

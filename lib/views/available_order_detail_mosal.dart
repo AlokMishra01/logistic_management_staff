@@ -335,7 +335,7 @@ class _AvailableOrderDetailModalState extends State<AvailableOrderDetailModal> {
                           GeneralButton(
                             color: FIELD_BACKGROUND,
                             child: const Text(
-                              'CALL RECIVER',
+                              'CALL RECEIVER',
                               style: TextStyle(
                                 color: TEXT_BLUE,
                                 fontSize: DETAILS_TEXT - 2,
