@@ -3,6 +3,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logistic_management_staff/constants/enums.dart';
 import 'package:logistic_management_staff/controllers/route_controller.dart';
+import 'package:logistic_management_staff/views/change_password.dart';
 import 'package:logistic_management_staff/views/profile_update.dart';
 import 'package:logistic_management_staff/widgets/dialogs/bottom_dialog.dart';
 import 'package:logistic_management_staff/widgets/dialogs/loading_dialog.dart';
@@ -121,6 +122,31 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                   const SizedBox(height: BASE_PADDING),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ChangePassword(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'Change Password',
+                      style: TextStyle(
+                        color: RED,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(RADIUS),
+                        // side: BorderSide(
+                        //   color: RED,
+                        // ),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: BASE_PADDING),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,7 +383,7 @@ class _ProfileState extends State<Profile> {
   }
 
   _saveImage(BuildContext context, XFile image) async {
-    final croppedImage = await ImageCropper.cropImage(
+    final croppedImage = await ImageCropper().cropImage(
       sourcePath: image.path,
       aspectRatioPresets: [CropAspectRatioPreset.square],
       androidUiSettings: const AndroidUiSettings(
