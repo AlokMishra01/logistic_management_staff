@@ -48,7 +48,7 @@ class GeoLocatorController with ChangeNotifier {
 
   final LocationSettings _locationSettings = const LocationSettings(
     accuracy: LocationAccuracy.high,
-    distanceFilter: 1,
+    distanceFilter: 100,
     // timeLimit: Duration(seconds: 5),
   );
 

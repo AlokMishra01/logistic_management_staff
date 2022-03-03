@@ -1,9 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:logistic_management_staff/controllers/authentication_controller.dart';
+import 'package:provider/provider.dart';
 
+import '../constants/enums.dart';
 import '../constants/values.dart' as values;
 import '../widgets/custom_button.dart';
 import '../widgets/custom_input.dart';
+import '../widgets/dialogs/bottom_dialog.dart';
+import '../widgets/dialogs/loading_dialog.dart';
 import '../widgets/header.dart';
 
 class ChangePassword extends StatefulWidget {
@@ -128,58 +133,59 @@ class _ChangePasswordState extends State<ChangePassword> {
 
   _update() async {
     FocusScope.of(context).requestFocus(FocusNode());
-    // if (_name.text.isEmpty) {
-    //   showBottomDialog(
-    //     context: context,
-    //     dialogType: DialogType.ERROR,
-    //     title: 'ERROR!',
-    //     message: 'Please enter name',
-    //   );
-    //   return;
-    // }
-    // if (_phone.text.isEmpty) {
-    //   showBottomDialog(
-    //     context: context,
-    //     dialogType: DialogType.ERROR,
-    //     title: 'ERROR!',
-    //     message: 'Please enter mobile number',
-    //   );
-    //   return;
-    // }
-    // if (!isEmail(_email.text)) {
-    //   showBottomDialog(
-    //     context: context,
-    //     dialogType: DialogType.ERROR,
-    //     title: 'ERROR!',
-    //     message: 'Please enter valid email',
-    //   );
-    //   return;
-    // }
-    //
-    // var progressDialog = getProgressDialog(context: context);
-    // progressDialog.show(useSafeArea: false);
-    //
-    // var result = await context.read<AuthenticationController>().updateProfile(
-    //       name: _name.text,
-    //       email: _email.text,
-    //       phone: _phone.text.replaceAll(' ', ''),
-    //     );
-    //
-    // progressDialog.dismiss();
-    //
-    // if (result) {
-    //   showBottomDialog(
-    //     context: context,
-    //     dialogType: DialogType.SUCCESS,
-    //     title: 'Update Successfully',
-    //     message: 'Your profile is updated successfully.',
-    //   );
-    // } else {
-    //   showBottomDialog(
-    //     context: context,
-    //     dialogType: DialogType.ERROR,
-    //     title: 'Update Error',
-    //   );
-    // }
+    if (_oldPassword.text.isEmpty) {
+      showBottomDialog(
+        context: context,
+        dialogType: DialogType.ERROR,
+        title: 'ERROR!',
+        message: 'Please enter old password',
+      );
+      return;
+    }
+    if (_newPassword.text.isEmpty) {
+      showBottomDialog(
+        context: context,
+        dialogType: DialogType.ERROR,
+        title: 'ERROR!',
+        message: 'Please enter new password',
+      );
+      return;
+    }
+    if (_newPassword.text != _confirmPassword.text) {
+      showBottomDialog(
+        context: context,
+        dialogType: DialogType.ERROR,
+        title: 'ERROR!',
+        message: 'Password don not match',
+      );
+      return;
+    }
+
+    var progressDialog = getProgressDialog(context: context);
+    progressDialog.show(useSafeArea: false);
+
+    var result = await context.read<AuthenticationController>().updatePassword(
+          oldPassword: _oldPassword.text,
+          newPassword: _newPassword.text,
+        );
+
+    progressDialog.dismiss();
+
+    if (result.isEmpty) {
+      showBottomDialog(
+        context: context,
+        dialogType: DialogType.SUCCESS,
+        title: 'Update Successfully',
+        message: 'Your password is updated successfully.',
+      );
+      Navigator.pop(context);
+    } else {
+      showBottomDialog(
+        context: context,
+        dialogType: DialogType.ERROR,
+        title: 'Update Error',
+        message: result,
+      );
+    }
   }
 }
