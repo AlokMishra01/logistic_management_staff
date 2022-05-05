@@ -139,6 +139,7 @@ class PickupDataModel {
     double? packagePrice,
     bool? express,
     String? status,
+    String? packageCode,
   }) {
     _id = id;
     _senderName = senderName;
@@ -160,6 +161,7 @@ class PickupDataModel {
     _packagePrice = packagePrice;
     _express = express;
     _status = status;
+    _packageCode = packageCode;
   }
 
   PickupDataModel.fromJson(dynamic json) {
@@ -183,6 +185,7 @@ class PickupDataModel {
     _packagePrice = double.parse((json['package_price'] ?? 0.0).toString());
     _express = json['express'];
     _status = json['status'];
+    _packageCode = json['package_code'];
   }
   int? _id;
   String? _senderName;
@@ -204,6 +207,7 @@ class PickupDataModel {
   double? _packagePrice;
   bool? _express;
   String? _status;
+  String? _packageCode;
 
   int? get id => _id;
   String? get senderName => _senderName;
@@ -225,6 +229,7 @@ class PickupDataModel {
   double? get packagePrice => _packagePrice;
   bool? get express => _express;
   String? get status => _status;
+  String? get packageCode => _packageCode;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -248,6 +253,7 @@ class PickupDataModel {
     map['package_price'] = _packagePrice;
     map['express'] = _express;
     map['status'] = _status;
+    map['package_code'] = _packageCode;
     return map;
   }
 }

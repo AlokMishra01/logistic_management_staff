@@ -28,6 +28,7 @@ class RequestModel {
   int? status;
   String? pickupDate;
   String? dropoffDate;
+  String? packageCode;
 
   RequestModel({
     this.id,
@@ -59,6 +60,7 @@ class RequestModel {
     this.status,
     this.pickupDate,
     this.dropoffDate,
+    this.packageCode,
   });
 
   RequestModel.fromJson(dynamic json) {
@@ -91,6 +93,7 @@ class RequestModel {
     status = json["status"];
     pickupDate = json["pickup_date"];
     dropoffDate = json["dropoff_date"];
+    packageCode = json['package_code'];
   }
 
   Map<String, dynamic> toJson() {
@@ -124,6 +127,7 @@ class RequestModel {
     map["status"] = status;
     map["pickup_date"] = pickupDate;
     map["dropoff_date"] = dropoffDate;
+    map['package_code'] = packageCode;
     return map;
   }
 }

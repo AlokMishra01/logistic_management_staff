@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.comfortaaTextTheme(),
       ),
       home: const Splash(),
+      // home: const BluetoothView(),
       // routeInformationParser: _router.routeInformationParser,
       // routerDelegate: _router.routerDelegate,
     );

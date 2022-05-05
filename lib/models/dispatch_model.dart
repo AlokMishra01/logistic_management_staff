@@ -61,6 +61,7 @@ class DispatchModel {
   String? postalcode;
   String? lat;
   String? lon;
+  String? packageCode;
 
   DispatchModel({
     this.dispatchId,
@@ -125,6 +126,7 @@ class DispatchModel {
     this.postalcode,
     this.lat,
     this.lon,
+    this.packageCode,
   });
 
   DispatchModel.fromJson(dynamic json) {
@@ -190,6 +192,7 @@ class DispatchModel {
     postalcode = json["postalcode"].toString();
     lat = json["lat"].toString();
     lon = json["lon"].toString();
+    packageCode = json['package_code'].toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -256,6 +259,7 @@ class DispatchModel {
     map["postalcode"] = postalcode;
     map["lat"] = lat;
     map["lon"] = lon;
+    map['package_code'] = packageCode;
     return map;
   }
 }

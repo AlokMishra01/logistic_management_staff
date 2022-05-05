@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:logistic_management_staff/controllers/printer_controller.dart';
 import 'package:logistic_management_staff/controllers/route_controller.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +28,7 @@ class _SplashState extends State<Splash> {
   void initState() {
     super.initState();
     context.read<ConnectivityController>();
+    context.read<PrinterController>();
     context.read<DioController>();
     context.read<AuthenticationController>();
     context.read<GeoLocatorController>();

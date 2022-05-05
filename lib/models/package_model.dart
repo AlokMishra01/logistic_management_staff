@@ -21,6 +21,7 @@ class PackageModel {
   String? createdAt;
   String? updatedAt;
   int? userId;
+  String? packageCode;
 
   PackageModel({
     this.id,
@@ -45,6 +46,7 @@ class PackageModel {
     this.createdAt,
     this.updatedAt,
     this.userId,
+    this.packageCode,
   });
 
   PackageModel.fromJson(dynamic json) {
@@ -70,6 +72,7 @@ class PackageModel {
     createdAt = json["created_at"].toString();
     updatedAt = json["updated_at"].toString();
     userId = json["user_id"];
+    packageCode = json['package_code'];
   }
 
   Map<String, dynamic> toJson() {
@@ -96,6 +99,7 @@ class PackageModel {
     map["created_at"] = createdAt;
     map["updated_at"] = updatedAt;
     map["user_id"] = userId;
+    map['package_code'] = packageCode;
     return map;
   }
 }

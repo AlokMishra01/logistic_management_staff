@@ -15,6 +15,7 @@ import 'controllers/delivery_controller.dart';
 import 'controllers/dio_controller.dart';
 import 'controllers/geo_locator_controller.dart';
 import 'controllers/pickup_controller.dart';
+import 'controllers/printer_controller.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -53,6 +54,9 @@ void main() async {
           create: (cxt) => ConnectivityController(),
         ),
         ChangeNotifierProvider(
+          create: (cxt) => PrinterController(),
+        ),
+        ChangeNotifierProvider(
           create: (cxt) => DioController(cxt),
         ),
         ChangeNotifierProxyProvider2<ConnectivityController, DioController,
@@ -69,27 +73,27 @@ void main() async {
           ),
         ),
         ChangeNotifierProxyProvider3<ConnectivityController, DioController,
-            AuthenticationController, PickupController>(
-          create: (cxt) => PickupController(null, null, null),
-          update: (cxt, conn, dio, auth, pickup) => PickupController(
+            AuthenticationController, DeliveryController>(
+          create: (cxt) => DeliveryController(null, null, null),
+          update: (cxt, conn, dio, auth, pickup) => DeliveryController(
             conn,
             dio,
             auth,
+          ),
+        ),
+        ChangeNotifierProxyProvider3<ConnectivityController, DioController,
+            DeliveryController, PickupController>(
+          create: (cxt) => PickupController(null, null, null),
+          update: (cxt, conn, dio, delivery, pickup) => PickupController(
+            conn,
+            dio,
+            delivery,
           ),
         ),
         ChangeNotifierProxyProvider3<ConnectivityController, DioController,
             AuthenticationController, RouteController>(
           create: (cxt) => RouteController(null, null, null),
           update: (cxt, conn, dio, auth, route) => RouteController(
-            conn,
-            dio,
-            auth,
-          ),
-        ),
-        ChangeNotifierProxyProvider3<ConnectivityController, DioController,
-            AuthenticationController, DeliveryController>(
-          create: (cxt) => DeliveryController(null, null, null),
-          update: (cxt, conn, dio, auth, pickup) => DeliveryController(
             conn,
             dio,
             auth,

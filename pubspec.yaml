@@ -3,7 +3,7 @@ description: Logistic Management Staff App
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+1
+version: 1.0.0
 
 environment:
   sdk: ">=2.16.1 <3.0.0"
@@ -16,15 +16,15 @@ dependencies:
   cached_network_image: ^3.2.0
   carousel_slider: ^4.0.0
   community_material_icon: ^5.9.55
-  connectivity_plus: ^2.2.1
+  connectivity_plus: ^2.3.0
   cupertino_icons: ^1.0.4
-  dio: ^4.0.4
+  dio: ^4.0.6
   flash: ^2.0.3+2
   flutter_multi_formatter: ^2.5.1
   flutter_polyline_points: ^1.0.0
   geolocator: ^8.2.0
   google_fonts: ^2.3.1
-  google_maps_flutter: ^2.1.2
+  google_maps_flutter: ^2.1.3
   material_color_generator: ^1.1.0
   permission_handler: ^9.2.0
   pretty_json: ^2.0.0
@@ -38,14 +38,18 @@ dependencies:
   flutter_image_compress: ^1.1.0
   path_provider: ^2.0.9
 
-  image_picker: ^0.8.4+10
-  image_cropper: ^1.5.0
+  image_picker: ^0.8.5
+  image_cropper: ^1.5.1
   signature: ^5.0.0
 
-  device_info_plus: ^3.2.2
+  device_info_plus: ^3.2.3
 
-  firebase_core: ^1.13.1
-  firebase_messaging: ^11.2.8
+  firebase_core: ^1.14.1
+  firebase_messaging: ^11.2.13
+
+  flutter_bluetooth_serial: ^0.4.0
+  barcode_widget: ^2.0.2
+
 
 #  socket_io_client: ^1.0.2
 #  go_router: ^2.5.7
@@ -61,13 +65,14 @@ dev_dependencies:
 #  platform: ^3.1.0
 
 flutter_icons:
-  # image_path: "images/launcher/icon.png"
+  # image_path: "images/launcher/icon.jpg"
   ios: true
   android: true
+  image_path: "images/launcher/icon.png"
   image_path_android: "images/launcher/icon.png"
   image_path_ios: "images/launcher/icon.png"
-  adaptive_icon_background: "images/launcher/background.png"
-  adaptive_icon_foreground: "images/launcher/foreground.png"
+  adaptive_icon_background: "#7c7c7c"
+  adaptive_icon_foreground: "images/launcher/icon.png"
 
 
 flutter:

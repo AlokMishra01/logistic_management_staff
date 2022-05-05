@@ -1,13 +1,12 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:logistic_management_staff/constants/enums.dart';
 import 'package:logistic_management_staff/controllers/delivery_controller.dart';
-import 'package:logistic_management_staff/controllers/pickup_controller.dart';
+import 'package:logistic_management_staff/controllers/printer_controller.dart';
 import 'package:logistic_management_staff/models/assigned_response_model.dart';
 import 'package:logistic_management_staff/models/pickup_response_model.dart';
 import 'package:logistic_management_staff/widgets/custom_button.dart';
@@ -22,6 +21,8 @@ import '../../constants/values.dart';
 import '../../widgets/detail_row.dart';
 import '../../widgets/general_button.dart';
 import '../../widgets/profile_info_heading.dart';
+import '../controllers/pickup_controller.dart';
+import 'modal_print.dart';
 import 'signature_page.dart';
 
 class AvailableOrderDetailModal extends StatefulWidget {
@@ -434,66 +435,14 @@ class _AvailableOrderDetailModalState extends State<AvailableOrderDetailModal> {
       //   title: 'Success',
       //   message: 'You have successfully picked up package.',
       // );
+
+      context.read<PrinterController>().searchDevices();
+
       Navigator.pop(context);
       showModalBottomSheet(
         context: (context),
-        builder: (_) => Column(
-          children: [
-            const SizedBox(height: BASE_PADDING),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  width: 100,
-                  height: 4,
-                  decoration: const BoxDecoration(
-                    color: TEXT_SECONDARY_LIGHT,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(12.0),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: BASE_PADDING),
-            const Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: BASE_PADDING * 2,
-              ),
-              child: Text(
-                'You have successfully picked up package.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: TEXT_SECONDARY,
-                  fontSize: SUB_HEADER_TEXT,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const SizedBox(height: BASE_PADDING),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(BASE_PADDING * 2),
-                child: CachedNetworkImage(
-                  imageUrl: result,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: BASE_PADDING * 2,
-              ),
-              child: CustomButton(
-                title: 'Print Label',
-                onTab: () {
-                  // Navigator.pop(context);
-                },
-              ),
-            ),
-            const SizedBox(height: BASE_PADDING),
-            const SizedBox(height: BASE_PADDING),
-          ],
+        builder: (_) => ModalPrint(
+          barcode: widget.pickup.packageCode ?? 'N/a',
         ),
         isScrollControlled: false,
         backgroundColor: TEXT_WHITE,

@@ -86,7 +86,9 @@ class GeoLocatorController with ChangeNotifier {
 
   @override
   void dispose() {
-    _locationSubscription.cancel();
+    try {
+      _locationSubscription.cancel();
+    } catch (e) {}
     super.dispose();
   }
 

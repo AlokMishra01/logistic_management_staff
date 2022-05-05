@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:logistic_management_staff/models/pickup_response_model.dart';
 
+import '../models/pickup_response_model.dart';
 import '../services/pickup_service.dart';
-import 'authentication_controller.dart';
 import 'connectivity_controller.dart';
+import 'delivery_controller.dart';
 import 'dio_controller.dart';
 
 class PickupController with ChangeNotifier {
   final ConnectivityController? _connectivityController;
   final DioController? _dioController;
-  final AuthenticationController? _authenticationController;
+  final DeliveryController? _deliveryController;
 
   final _pickupService = PickupService.service;
 
   PickupController(
     this._connectivityController,
     this._dioController,
-    this._authenticationController,
+    this._deliveryController,
   ) {
     getPendingPickups();
     getPickedUpPickups();
@@ -110,6 +110,7 @@ class PickupController with ChangeNotifier {
     );
 
     if (result.isNotEmpty) {
+      _deliveryController?.getDispatched();
       getPendingPickups();
       getPickedUpPickups();
     }

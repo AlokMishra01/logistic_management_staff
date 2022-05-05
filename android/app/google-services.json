@@ -7,6 +7,101 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:692417989039:android:d8faa129fdb89833b5875a",
+        "android_client_info": {
+          "package_name": "com.ikima.delivery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "692417989039-4f8v32kmpt9ji4h75jh6g4vr07o1g5oi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZIYpugg_4w_YGUi4LOTN97MNbw9NB6mI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "692417989039-4f8v32kmpt9ji4h75jh6g4vr07o1g5oi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:692417989039:android:4e85e3e5a0c9e938b5875a",
+        "android_client_info": {
+          "package_name": "com.ikima.express"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "692417989039-ebd1ilo0dhp98oj275erebfoejsejvq5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ikima.express",
+            "certificate_hash": "0cb52c8a7cec638779d165d076cc7ff0d16b448d"
+          }
+        },
+        {
+          "client_id": "692417989039-4f8v32kmpt9ji4h75jh6g4vr07o1g5oi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZIYpugg_4w_YGUi4LOTN97MNbw9NB6mI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "692417989039-4f8v32kmpt9ji4h75jh6g4vr07o1g5oi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:692417989039:android:70eed8fab206ed85b5875a",
+        "android_client_info": {
+          "package_name": "com.intopros.logistic_management_customer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "692417989039-4f8v32kmpt9ji4h75jh6g4vr07o1g5oi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZIYpugg_4w_YGUi4LOTN97MNbw9NB6mI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "692417989039-4f8v32kmpt9ji4h75jh6g4vr07o1g5oi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:692417989039:android:e42dab33ab12220cb5875a",
         "android_client_info": {
           "package_name": "com.intopros.logistic_management_staff"
