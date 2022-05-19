@@ -59,7 +59,8 @@ class Load extends StatelessWidget {
         //     ],
         //   ),
         // ),
-        if (delivery.dispatchedList.isNotEmpty)
+        if (delivery.dispatchedList.isNotEmpty ||
+            delivery.dispatchPickupList.isNotEmpty)
           Expanded(
             child: RefreshIndicator(
               onRefresh: () => delivery.getDispatched(),
@@ -109,7 +110,8 @@ class Load extends StatelessWidget {
               ),
             ),
           ),
-        if (delivery.dispatchedList.isEmpty)
+        if (delivery.dispatchedList.isEmpty &&
+            delivery.dispatchPickupList.isEmpty)
           Expanded(
             child: Center(
               child: Padding(

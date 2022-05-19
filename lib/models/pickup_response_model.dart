@@ -122,21 +122,21 @@ class PickupDataModel {
     int? id,
     String? senderName,
     String? senderAddress,
-    int? senderMobileno,
+    String? senderMobileno,
     String? senderLat,
     String? senderLon,
     String? recieverName,
     String? recieverAddress,
-    int? recieverMobileno,
+    String? recieverMobileno,
     String? recieverLat,
     String? recieverLon,
     String? packageType,
-    int? packageWeight,
-    int? packageSize,
+    String? packageWeight,
+    String? packageSize,
     String? pickupTime,
     String? dropoffTime,
     bool? fragile,
-    double? packagePrice,
+    String? packagePrice,
     bool? express,
     String? status,
     String? packageCode,
@@ -168,21 +168,21 @@ class PickupDataModel {
     _id = json['id'];
     _senderName = json['sender_name'];
     _senderAddress = json['sender_address'];
-    _senderMobileno = json['sender_mobileno'];
+    _senderMobileno = (json['sender_mobileno'] ?? '').toString();
     _senderLat = json['sender_lat'];
     _senderLon = json['sender_lon'];
     _recieverName = json['reciever_name'];
     _recieverAddress = json['reciever_address'];
-    _recieverMobileno = json['reciever_mobileno'];
+    _recieverMobileno = (json['reciever_mobileno'] ?? '').toString();
     _recieverLat = json['reciever_lat'];
     _recieverLon = json['reciever_lon'];
     _packageType = json['package_type'];
-    _packageWeight = json['package_weight'];
-    _packageSize = json['package_size'];
+    _packageWeight = (json['package_weight'] ?? '').toString();
+    _packageSize = (json['package_size'] ?? '').toString();
     _pickupTime = json['pickup_time'];
     _dropoffTime = json['dropoff_time'];
     _fragile = json['fragile'];
-    _packagePrice = double.parse((json['package_price'] ?? 0.0).toString());
+    _packagePrice = (json['package_price'] ?? '').toString();
     _express = json['express'];
     _status = json['status'];
     _packageCode = json['package_code'];
@@ -190,21 +190,21 @@ class PickupDataModel {
   int? _id;
   String? _senderName;
   String? _senderAddress;
-  int? _senderMobileno;
+  String? _senderMobileno;
   String? _senderLat;
   String? _senderLon;
   String? _recieverName;
   String? _recieverAddress;
-  int? _recieverMobileno;
+  String? _recieverMobileno;
   String? _recieverLat;
   String? _recieverLon;
   String? _packageType;
-  int? _packageWeight;
-  int? _packageSize;
+  String? _packageWeight;
+  String? _packageSize;
   String? _pickupTime;
   String? _dropoffTime;
   bool? _fragile;
-  double? _packagePrice;
+  String? _packagePrice;
   bool? _express;
   String? _status;
   String? _packageCode;
@@ -212,21 +212,21 @@ class PickupDataModel {
   int? get id => _id;
   String? get senderName => _senderName;
   String? get senderAddress => _senderAddress;
-  int? get senderMobileno => _senderMobileno;
+  String? get senderMobileno => _senderMobileno;
   String? get senderLat => _senderLat;
   String? get senderLon => _senderLon;
   String? get recieverName => _recieverName;
   String? get recieverAddress => _recieverAddress;
-  int? get recieverMobileno => _recieverMobileno;
+  String? get recieverMobileno => _recieverMobileno;
   String? get recieverLat => _recieverLat;
   String? get recieverLon => _recieverLon;
   String? get packageType => _packageType;
-  int? get packageWeight => _packageWeight;
-  int? get packageSize => _packageSize;
+  String? get packageWeight => _packageWeight;
+  String? get packageSize => _packageSize;
   String? get pickupTime => _pickupTime;
   String? get dropoffTime => _dropoffTime;
   bool? get fragile => _fragile;
-  double? get packagePrice => _packagePrice;
+  String? get packagePrice => _packagePrice;
   bool? get express => _express;
   String? get status => _status;
   String? get packageCode => _packageCode;

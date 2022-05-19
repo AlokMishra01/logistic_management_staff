@@ -386,18 +386,20 @@ class _ProfileState extends State<Profile> {
     final croppedImage = await ImageCropper().cropImage(
       sourcePath: image.path,
       aspectRatioPresets: [CropAspectRatioPreset.square],
-      androidUiSettings: const AndroidUiSettings(
-        toolbarTitle: 'Crop Profile Image',
-        toolbarColor: BUTTON_BLUE,
-        toolbarWidgetColor: TEXT_WHITE,
-        initAspectRatio: CropAspectRatioPreset.square,
-        lockAspectRatio: false,
-        activeControlsWidgetColor: BUTTON_BLUE,
-      ),
-      iosUiSettings: const IOSUiSettings(
-        title: 'Crop Profile Image',
-        minimumAspectRatio: 1.0,
-      ),
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Crop Profile Image',
+          toolbarColor: BUTTON_BLUE,
+          toolbarWidgetColor: TEXT_WHITE,
+          initAspectRatio: CropAspectRatioPreset.square,
+          lockAspectRatio: false,
+          activeControlsWidgetColor: BUTTON_BLUE,
+        ),
+        IOSUiSettings(
+          title: 'Crop Profile Image',
+          minimumAspectRatio: 1.0,
+        ),
+      ],
     );
 
     if (croppedImage != null) {

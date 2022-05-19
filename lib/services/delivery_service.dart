@@ -64,9 +64,10 @@ class DeliveryService {
       Response response = await dio.dioClient.get(
         'staff/assgined/pickedup_dispatch?limit=$limit',
       );
-      log('Get Dispatch Response!: ${prettyJson(response.data)}');
+      log('Get Dispatch Response! ${response.requestOptions.uri.toString()}: ${prettyJson(response.data)}');
       if (response.statusCode == 200) {
         final data = DispatchResponseModel.fromJson(response.data);
+        log('Testing ' + prettyJson(data.toJson()));
         return data;
       } else {
         return null;

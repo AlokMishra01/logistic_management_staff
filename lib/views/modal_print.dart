@@ -64,52 +64,68 @@ class ModalPrint extends StatelessWidget {
               ),
           if (!p.isConnected)
             if (!p.isSearching || !p.isConnecting)
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(BASE_PADDING * 2),
-                  child: RefreshIndicator(
-                    onRefresh: () => p.searchDevices(),
-                    child: ListView.separated(
-                      itemBuilder: (_, i) {
-                        return ListTile(
-                          dense: true,
-                          leading: const Icon(
-                            CupertinoIcons.bluetooth,
-                            color: BUTTON_BLUE,
-                          ),
-                          title: Text(
-                            p.bluetoothDevices[i].name ?? 'N/a',
-                            style: const TextStyle(
-                              color: TEXT_BLACK,
-                              fontSize: TITLE_TEXT,
-                              fontWeight: FontWeight.w600,
+              if (p.bluetoothDevices.isNotEmpty)
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(BASE_PADDING * 2),
+                    child: RefreshIndicator(
+                      onRefresh: () => p.searchDevices(),
+                      child: ListView.separated(
+                        itemBuilder: (_, i) {
+                          return ListTile(
+                            dense: true,
+                            leading: const Icon(
+                              CupertinoIcons.bluetooth,
+                              color: BUTTON_BLUE,
                             ),
-                          ),
-                          onTap: () async {
-                            String res = await p.connectDevice(
-                              device: p.bluetoothDevices[i],
-                            );
-
-                            if (res.isEmpty) {
-                              Navigator.pop(context);
-                            } else {
-                              showBottomDialog(
-                                context: context,
-                                dialogType: DialogType.ERROR,
-                                title: 'Error',
-                                message: res,
+                            title: Text(
+                              p.bluetoothDevices[i].name ?? 'N/a',
+                              style: const TextStyle(
+                                color: TEXT_BLACK,
+                                fontSize: TITLE_TEXT,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            onTap: () async {
+                              String res = await p.connectDevice(
+                                device: p.bluetoothDevices[i],
                               );
-                            }
-                          },
-                        );
-                      },
-                      separatorBuilder: (_, i) =>
-                          const SizedBox(height: BASE_PADDING),
-                      itemCount: p.bluetoothDevices.length,
+
+                              if (res.isEmpty) {
+                                Navigator.pop(context);
+                              } else {
+                                showBottomDialog(
+                                  context: context,
+                                  dialogType: DialogType.ERROR,
+                                  title: 'Error',
+                                  message: res,
+                                );
+                              }
+                            },
+                          );
+                        },
+                        separatorBuilder: (_, i) =>
+                            const SizedBox(height: BASE_PADDING),
+                        itemCount: p.bluetoothDevices.length,
+                      ),
                     ),
                   ),
                 ),
-              ),
+          if (!p.isConnected)
+            if (!p.isSearching || !p.isConnecting)
+              if (p.bluetoothDevices.isEmpty)
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(BASE_PADDING * 2),
+                    child: Center(
+                      child: BarcodeWidget(
+                        barcode: Barcode.code39(),
+                        height: 100,
+                        data: barcode,
+                      ),
+                    ),
+                  ),
+                ),
           if (p.isConnected)
             Expanded(
               child: Padding(
