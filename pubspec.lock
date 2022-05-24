@@ -376,7 +376,7 @@ packages:
       name: flutter_multi_formatter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.5.6"
+    version: "2.5.7"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -449,7 +449,7 @@ packages:
       name: google_fonts
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.2"
+    version: "3.0.1"
   google_maps_flutter:
     dependency: "direct main"
     description:
@@ -757,7 +757,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.2"
+    version: "6.0.3"
   qr:
     dependency: transitive
     description:

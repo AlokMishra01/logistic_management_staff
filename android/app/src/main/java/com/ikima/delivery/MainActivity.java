@@ -38,7 +38,7 @@ public class MainActivity extends FlutterActivity {
         try {
             setup = new Setup();
 
-            boolean activate = setup.blActivateLibrary(context, R.raw.licence);
+            boolean activate = setup.blActivateLibrary(context, R.raw.licencefull);
 
             if (activate) {
                 Log.d("ProwessPrideSDK","SDK Activated");

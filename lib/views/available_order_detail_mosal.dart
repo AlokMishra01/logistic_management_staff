@@ -4,18 +4,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:logistic_management_staff/constants/enums.dart';
-import 'package:logistic_management_staff/controllers/delivery_controller.dart';
-import 'package:logistic_management_staff/controllers/printer_controller.dart';
-import 'package:logistic_management_staff/models/assigned_response_model.dart';
-import 'package:logistic_management_staff/models/pickup_response_model.dart';
-import 'package:logistic_management_staff/widgets/custom_button.dart';
-import 'package:logistic_management_staff/widgets/custom_button_outline.dart';
-import 'package:logistic_management_staff/widgets/dialogs/bottom_dialog.dart';
-import 'package:logistic_management_staff/widgets/dialogs/loading_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '/constants/enums.dart';
+import '/controllers/delivery_controller.dart';
+import '/controllers/geo_locator_controller.dart';
+import '/models/assigned_response_model.dart';
+import '/models/pickup_response_model.dart';
+import '/widgets/custom_button.dart';
+import '/widgets/custom_button_outline.dart';
+import '/widgets/dialogs/bottom_dialog.dart';
+import '/widgets/dialogs/loading_dialog.dart';
 import '../../constants/colors.dart';
 import '../../constants/values.dart';
 import '../../widgets/detail_row.dart';
@@ -45,6 +45,7 @@ class AvailableOrderDetailModal extends StatefulWidget {
 class _AvailableOrderDetailModalState extends State<AvailableOrderDetailModal> {
   @override
   Widget build(BuildContext context) {
+    final geoLocation = context.watch<GeoLocatorController>();
     return Container(
       decoration: const BoxDecoration(
         color: TEXT_WHITE,
@@ -56,6 +57,7 @@ class _AvailableOrderDetailModalState extends State<AvailableOrderDetailModal> {
         padding: const EdgeInsets.symmetric(horizontal: BASE_PADDING),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: BASE_PADDING),
             Row(
@@ -74,344 +76,342 @@ class _AvailableOrderDetailModalState extends State<AvailableOrderDetailModal> {
               ],
             ),
             const SizedBox(height: BASE_PADDING),
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            Center(
+              child: GeneralButton(
+                color: Colors.green,
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Center(
-                      child: GeneralButton(
-                        color: Colors.green,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            Icon(
-                              CupertinoIcons.map,
-                              color: TEXT_WHITE,
-                              size: 20,
-                            ),
-                            SizedBox(width: 8),
-                            Text(
-                              'View Route',
-                              style: TextStyle(
-                                color: TEXT_WHITE,
-                                fontSize: DETAILS_TEXT - 2,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        onTab: () {
-                          launch(
-                            'https://www.google.com/maps/dir/'
-                            '${widget.pickup.senderLat},${widget.pickup.senderLon}/'
-                            '${widget.pickup.recieverLat},${widget.pickup.recieverLon}',
-                          );
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (_) => MapPage(
-                          //       latLngFrom: LatLng(
-                          //         double.parse(
-                          //           widget.isPickOff
-                          //               ? widget.pickup.senderLat ??
-                          //                   '27.688250415756407'
-                          //               : widget.assign.senderLat ??
-                          //                   '27.688250415756407',
-                          //         ),
-                          //         double.parse(
-                          //           widget.isPickOff
-                          //               ? widget.pickup.senderLon ??
-                          //                   '85.33557353207128'
-                          //               : widget.assign.senderLon ??
-                          //                   '85.33557353207128',
-                          //         ),
-                          //       ),
-                          //       latLngTo: LatLng(
-                          //         double.parse(
-                          //           widget.isPickOff
-                          //               ? widget.pickup.recieverLat ??
-                          //                   '27.688250415756407'
-                          //               : widget.assign.recieverLat ??
-                          //                   '27.688250415756407',
-                          //         ),
-                          //         double.parse(
-                          //           widget.isPickOff
-                          //               ? widget.pickup.recieverLon ??
-                          //                   '85.33557353207128'
-                          //               : widget.assign.recieverLon ??
-                          //                   '85.33557353207128',
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ),
-                          // );
-                        },
+                  children: const [
+                    Icon(
+                      CupertinoIcons.map,
+                      color: TEXT_WHITE,
+                      size: 20,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'View Route',
+                      style: TextStyle(
+                        color: TEXT_WHITE,
+                        fontSize: DETAILS_TEXT - 2,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: BASE_PADDING),
-                    const ProfileInfoHeading(title: 'Sender Inforamtion'),
-                    DetailRow(
-                      title: 'Name: ',
-                      value: widget.isPickOff
-                          ? '${widget.pickup.senderName}'
-                          : '${widget.assign.senderName}',
-                    ),
-                    DetailRow(
-                      title: 'Address: ',
-                      value: widget.isPickOff
-                          ? '${widget.pickup.senderAddress}'
-                          : '${widget.assign.senderAddress}',
-                    ),
-                    DetailRow(
-                      title: 'Mobile Number: ',
-                      value: widget.isPickOff
-                          ? '${widget.pickup.senderMobileno}'
-                          : '${widget.assign.senderMobileno}',
-                    ),
-                    // DetailRow(
-                    //   title: 'Email: ',
-                    //   value: '',
-                    // ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          GeneralButton(
-                            color: YELLOW,
-                            child: const Text(
-                              'SHOW ON MAP',
-                              style: TextStyle(
-                                color: TEXT_WHITE,
-                                fontSize: DETAILS_TEXT - 2,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            onTab: () {
-                              widget.isPickOff
-                                  ? launch(
-                                      'https://www.google.com/maps/dir/?api=1&destination='
-                                      '${widget.pickup.senderLat},'
-                                      '${widget.pickup.senderLon}',
-                                    )
-                                  : launch(
-                                      'https://www.google.com/maps/dir/?api=1&destination='
-                                      '${widget.assign.senderLat},'
-                                      '${widget.assign.senderLon}',
-                                    );
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (cxt) => MapPage(
-                              //       latLngFrom: widget.isPickOff
-                              //           ? LatLng(
-                              //               double.parse(
-                              //                   (widget.pickup.senderLat ??
-                              //                           '0.0')
-                              //                       .toString()),
-                              //               double.parse(
-                              //                   (widget.pickup.senderLon ??
-                              //                           '0.0')
-                              //                       .toString()),
-                              //             )
-                              //           : LatLng(
-                              //               double.parse(
-                              //                   (widget.assign.senderLat ??
-                              //                           '0.0')
-                              //                       .toString()),
-                              //               double.parse(
-                              //                   (widget.assign.senderLon ??
-                              //                           '0.0')
-                              //                       .toString()),
-                              //             ),
-                              //     ),
-                              //   ),
-                              // );
-                            },
-                          ),
-                          const SizedBox(width: 8.0),
-                          GeneralButton(
-                            color: FIELD_BACKGROUND,
-                            child: const Text(
-                              'CALL SENDER',
-                              style: TextStyle(
-                                color: TEXT_BLUE,
-                                fontSize: DETAILS_TEXT - 2,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            onTab: () {
-                              launch(
-                                'tel: '
-                                '${widget.isPickOff ? widget.pickup.senderMobileno : widget.assign.senderMobileno}',
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: BASE_PADDING),
-                    const ProfileInfoHeading(title: 'Reciever Inforamtion'),
-                    DetailRow(
-                      title: 'Name: ',
-                      value: widget.isPickOff
-                          ? '${widget.pickup.recieverName}'
-                          : '${widget.assign.recieverName}',
-                    ),
-                    DetailRow(
-                      title: 'Address: ',
-                      value: widget.isPickOff
-                          ? '${widget.pickup.recieverAddress}'
-                          : '${widget.assign.recieverAddress}',
-                    ),
-                    DetailRow(
-                      title: 'Mobile Number: ',
-                      value: widget.isPickOff
-                          ? '${widget.pickup.recieverMobileno}'
-                          : '${widget.assign.recieverMobileno}',
-                    ),
-                    // DetailRow(title: 'Email: ', value: ''),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          GeneralButton(
-                            color: YELLOW,
-                            child: const Text(
-                              'SHOW ON MAP',
-                              style: TextStyle(
-                                color: TEXT_WHITE,
-                                fontSize: DETAILS_TEXT - 2,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            onTab: () {
-                              widget.isPickOff
-                                  ? launch(
-                                      'https://www.google.com/maps/dir/?api=1&destination='
-                                      '${widget.pickup.recieverLat},'
-                                      '${widget.pickup.recieverLon}',
-                                    )
-                                  : launch(
-                                      'https://www.google.com/maps/dir/?api=1&destination='
-                                      '${widget.assign.recieverLat},'
-                                      '${widget.assign.recieverLon}',
-                                    );
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (cxt) => MapPage(
-                              //
-                              //       latLngFrom: widget.isPickOff
-                              //           ? LatLng(
-                              //               double.parse(
-                              //                   (widget.pickup.recieverLat ??
-                              //                           '0.0')
-                              //                       .toString()),
-                              //               double.parse(
-                              //                   (widget.pickup.recieverLon ??
-                              //                           '0.0')
-                              //                       .toString()),
-                              //             )
-                              //           : LatLng(
-                              //               double.parse(
-                              //                   (widget.assign.recieverLat ??
-                              //                           '0.0')
-                              //                       .toString()),
-                              //               double.parse(
-                              //                   (widget.assign.recieverLon ??
-                              //                           '0.0')
-                              //                       .toString()),
-                              //             ),
-                              //     ),
-                              //   ),
-                              // );
-                            },
-                          ),
-                          const SizedBox(width: 8.0),
-                          GeneralButton(
-                            color: FIELD_BACKGROUND,
-                            child: const Text(
-                              'CALL RECEIVER',
-                              style: TextStyle(
-                                color: TEXT_BLUE,
-                                fontSize: DETAILS_TEXT - 2,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            onTab: () {
-                              launch(
-                                'tel: '
-                                '${widget.isPickOff ? widget.pickup.recieverMobileno : widget.assign.recieverMobileno}',
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: BASE_PADDING),
-                    const ProfileInfoHeading(
-                        title: 'Delivery / Pickup Inforamtion'),
-                    widget.isPickOff
-                        ? const DetailRow(
-                            title: 'Pickup Date: ',
-                            value: 'N/a',
-                            // value: '${pickup.pickupDate}',
-                          )
-                        : Container(),
-                    widget.isPickOff
-                        ? DetailRow(
-                            title: 'Pickup Time: ',
-                            value: widget.pickup.pickupTime == null
-                                ? ''
-                                : Jiffy(widget.pickup.pickupTime, "H:m:s").jm,
-                          )
-                        : Container(),
-                    // !isPickOff
-                    //     ? DetailRow(
-                    //         title: 'Delivery Date: ',
-                    //         value: '${assign. ?? ''}',
-                    //       )
-                    //     : Container(),
-                    !widget.isPickOff
-                        ? DetailRow(
-                            title: 'Delivery Time: ',
-                            value: '${widget.assign.dropoffTime}',
-                          )
-                        : Container(),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: GeneralButton(
-                        color: BUTTON_BLUE,
-                        child: Text(
-                          widget.pickup.id != null
-                              ? 'Pick Up'
-                              : widget.assign.status == 'Delivered'
-                                  ? widget.assign.status ?? ''
-                                  : 'Deliver',
-                          // 'DELIVERED / PICKED UP',
-                          style: const TextStyle(
-                            color: TEXT_WHITE,
-                            fontSize: DETAILS_TEXT - 2,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        onTab: () {
-                          widget.pickup.id != null
-                              ? _pickup(context)
-                              : _dropOff();
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: BASE_PADDING),
                   ],
                 ),
+                onTab: () {
+                  if (widget.isPickOff) {
+                    launch(
+                      'https://www.google.com/maps/dir/'
+                      '${widget.pickup.senderLat ?? ''},'
+                      '${widget.pickup.senderLon ?? ''}/'
+                      '${widget.pickup.recieverLat ?? ''},'
+                      '${widget.pickup.recieverLon ?? ''}',
+                    );
+                  } else {
+                    launch(
+                      'https://www.google.com/maps/dir/'
+                      '${widget.assign.senderLat ?? ''},'
+                      '${widget.assign.senderLon ?? ''}/'
+                      '${widget.assign.recieverLat ?? ''},'
+                      '${widget.assign.recieverLon ?? ''}',
+                    );
+                  }
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (_) => MapPage(
+                  //       latLngFrom: LatLng(
+                  //         double.parse(
+                  //           widget.isPickOff
+                  //               ? widget.pickup.senderLat ??
+                  //                   '27.688250415756407'
+                  //               : widget.assign.senderLat ??
+                  //                   '27.688250415756407',
+                  //         ),
+                  //         double.parse(
+                  //           widget.isPickOff
+                  //               ? widget.pickup.senderLon ??
+                  //                   '85.33557353207128'
+                  //               : widget.assign.senderLon ??
+                  //                   '85.33557353207128',
+                  //         ),
+                  //       ),
+                  //       latLngTo: LatLng(
+                  //         double.parse(
+                  //           widget.isPickOff
+                  //               ? widget.pickup.recieverLat ??
+                  //                   '27.688250415756407'
+                  //               : widget.assign.recieverLat ??
+                  //                   '27.688250415756407',
+                  //         ),
+                  //         double.parse(
+                  //           widget.isPickOff
+                  //               ? widget.pickup.recieverLon ??
+                  //                   '85.33557353207128'
+                  //               : widget.assign.recieverLon ??
+                  //                   '85.33557353207128',
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // );
+                },
               ),
             ),
+            const SizedBox(height: BASE_PADDING),
+            const ProfileInfoHeading(title: 'Sender Inforamtion'),
+            DetailRow(
+              title: 'Name: ',
+              value: widget.isPickOff
+                  ? '${widget.pickup.senderName}'
+                  : '${widget.assign.senderName}',
+            ),
+            DetailRow(
+              title: 'Address: ',
+              value: widget.isPickOff
+                  ? '${widget.pickup.senderAddress}'
+                  : '${widget.assign.senderAddress}',
+            ),
+            DetailRow(
+              title: 'Mobile Number: ',
+              value: widget.isPickOff
+                  ? '${widget.pickup.senderMobileno}'
+                  : '${widget.assign.senderMobileno}',
+            ),
+            // DetailRow(
+            //   title: 'Email: ',
+            //   value: '',
+            // ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  GeneralButton(
+                    color: YELLOW,
+                    child: const Text(
+                      'SHOW ON MAP',
+                      style: TextStyle(
+                        color: TEXT_WHITE,
+                        fontSize: DETAILS_TEXT - 2,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    onTab: () {
+                      widget.isPickOff
+                          ? launch(
+                              'https://www.google.com/maps/dir/?api=1&destination='
+                              '${widget.pickup.senderLat},'
+                              '${widget.pickup.senderLon}',
+                            )
+                          : launch(
+                              'https://www.google.com/maps/dir/?api=1&destination='
+                              '${widget.assign.senderLat},'
+                              '${widget.assign.senderLon}',
+                            );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (cxt) => MapPage(
+                      //       latLngFrom: widget.isPickOff
+                      //           ? LatLng(
+                      //               double.parse(
+                      //                   (widget.pickup.senderLat ??
+                      //                           '0.0')
+                      //                       .toString()),
+                      //               double.parse(
+                      //                   (widget.pickup.senderLon ??
+                      //                           '0.0')
+                      //                       .toString()),
+                      //             )
+                      //           : LatLng(
+                      //               double.parse(
+                      //                   (widget.assign.senderLat ??
+                      //                           '0.0')
+                      //                       .toString()),
+                      //               double.parse(
+                      //                   (widget.assign.senderLon ??
+                      //                           '0.0')
+                      //                       .toString()),
+                      //             ),
+                      //     ),
+                      //   ),
+                      // );
+                    },
+                  ),
+                  const SizedBox(width: 8.0),
+                  GeneralButton(
+                    color: FIELD_BACKGROUND,
+                    child: const Text(
+                      'CALL SENDER',
+                      style: TextStyle(
+                        color: TEXT_BLUE,
+                        fontSize: DETAILS_TEXT - 2,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    onTab: () {
+                      launch(
+                        'tel: '
+                        '${widget.isPickOff ? widget.pickup.senderMobileno : widget.assign.senderMobileno}',
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: BASE_PADDING),
+            const ProfileInfoHeading(title: 'Reciever Inforamtion'),
+            DetailRow(
+              title: 'Name: ',
+              value: widget.isPickOff
+                  ? '${widget.pickup.recieverName}'
+                  : '${widget.assign.recieverName}',
+            ),
+            DetailRow(
+              title: 'Address: ',
+              value: widget.isPickOff
+                  ? '${widget.pickup.recieverAddress}'
+                  : '${widget.assign.recieverAddress}',
+            ),
+            DetailRow(
+              title: 'Mobile Number: ',
+              value: widget.isPickOff
+                  ? '${widget.pickup.recieverMobileno}'
+                  : '${widget.assign.recieverMobileno}',
+            ),
+            // DetailRow(title: 'Email: ', value: ''),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  GeneralButton(
+                    color: YELLOW,
+                    child: const Text(
+                      'SHOW ON MAP',
+                      style: TextStyle(
+                        color: TEXT_WHITE,
+                        fontSize: DETAILS_TEXT - 2,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    onTab: () {
+                      widget.isPickOff
+                          ? launch(
+                              'https://www.google.com/maps/dir/?api=1&destination='
+                              '${widget.pickup.recieverLat},'
+                              '${widget.pickup.recieverLon}',
+                            )
+                          : launch(
+                              'https://www.google.com/maps/dir/?api=1&destination='
+                              '${widget.assign.recieverLat},'
+                              '${widget.assign.recieverLon}',
+                            );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (cxt) => MapPage(
+                      //
+                      //       latLngFrom: widget.isPickOff
+                      //           ? LatLng(
+                      //               double.parse(
+                      //                   (widget.pickup.recieverLat ??
+                      //                           '0.0')
+                      //                       .toString()),
+                      //               double.parse(
+                      //                   (widget.pickup.recieverLon ??
+                      //                           '0.0')
+                      //                       .toString()),
+                      //             )
+                      //           : LatLng(
+                      //               double.parse(
+                      //                   (widget.assign.recieverLat ??
+                      //                           '0.0')
+                      //                       .toString()),
+                      //               double.parse(
+                      //                   (widget.assign.recieverLon ??
+                      //                           '0.0')
+                      //                       .toString()),
+                      //             ),
+                      //     ),
+                      //   ),
+                      // );
+                    },
+                  ),
+                  const SizedBox(width: 8.0),
+                  GeneralButton(
+                    color: FIELD_BACKGROUND,
+                    child: const Text(
+                      'CALL RECEIVER',
+                      style: TextStyle(
+                        color: TEXT_BLUE,
+                        fontSize: DETAILS_TEXT - 2,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    onTab: () {
+                      launch(
+                        'tel: '
+                        '${widget.isPickOff ? widget.pickup.recieverMobileno : widget.assign.recieverMobileno}',
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: BASE_PADDING),
+            const ProfileInfoHeading(title: 'Delivery / Pickup Inforamtion'),
+            widget.isPickOff
+                ? const DetailRow(
+                    title: 'Pickup Date: ',
+                    value: 'N/a',
+                    // value: '${pickup.pickupDate}',
+                  )
+                : Container(),
+            widget.isPickOff
+                ? DetailRow(
+                    title: 'Pickup Time: ',
+                    value: widget.pickup.pickupTime == null
+                        ? ''
+                        : Jiffy(widget.pickup.pickupTime, "H:m:s").jm,
+                  )
+                : Container(),
+            // !isPickOff
+            //     ? DetailRow(
+            //         title: 'Delivery Date: ',
+            //         value: '${assign. ?? ''}',
+            //       )
+            //     : Container(),
+            !widget.isPickOff
+                ? DetailRow(
+                    title: 'Delivery Time: ',
+                    value: widget.assign.dropoffTime ?? 'N/A',
+                  )
+                : Container(),
+            Align(
+              alignment: Alignment.centerRight,
+              child: GeneralButton(
+                color: BUTTON_BLUE,
+                child: Text(
+                  widget.pickup.id != null
+                      ? 'Pick Up'
+                      : widget.assign.status == 'Delivered'
+                          ? widget.assign.status ?? ''
+                          : 'Deliver',
+                  // 'DELIVERED / PICKED UP',
+                  style: const TextStyle(
+                    color: TEXT_WHITE,
+                    fontSize: DETAILS_TEXT - 2,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onTab: () {
+                  widget.pickup.id != null ? _pickup(context) : _dropOff();
+                },
+              ),
+            ),
+            const SizedBox(height: BASE_PADDING),
           ],
         ),
       ),
@@ -429,15 +429,6 @@ class _AvailableOrderDetailModalState extends State<AvailableOrderDetailModal> {
     progressDialog.dismiss();
 
     if (result.isNotEmpty) {
-      // showBottomDialog(
-      //   context: context,
-      //   dialogType: DialogType.SUCCESS,
-      //   title: 'Success',
-      //   message: 'You have successfully picked up package.',
-      // );
-
-      context.read<PrinterController>().searchDevices();
-
       Navigator.pop(context);
       showModalBottomSheet(
         context: (context),

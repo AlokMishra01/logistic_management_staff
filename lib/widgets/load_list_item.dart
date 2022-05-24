@@ -32,11 +32,34 @@ class LoadListItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: BASE_PADDING / 1.25),
-          DetailRow(
-            title: "Size: ",
-            value: "${model.packageSize}",
+          const SizedBox(height: BASE_PADDING),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: InkWell(
+              child: const Icon(
+                CupertinoIcons.map,
+                color: TEXT_BLUE,
+              ),
+              onTap: () {
+                isDispatch
+                    ? launch(
+                        'https://www.google.com/maps/dir/?api=1&destination='
+                        '${model.recieverLat},'
+                        '${model.recieverLon}',
+                      )
+                    : launch(
+                        'https://www.google.com/maps/dir/?api=1&destination='
+                        '${model.senderLat},'
+                        '${model.senderLon}',
+                      );
+              },
+            ),
           ),
+          const SizedBox(height: BASE_PADDING / 1.25),
+          // DetailRow(
+          //   title: "Size: ",
+          //   value: "${model.packageSize}",
+          // ),
           DetailRow(
             title: "Customer Name: ",
             value: isDispatch ? "${model.recieverName}" : "${model.senderName}",
@@ -60,24 +83,13 @@ class LoadListItem extends StatelessWidget {
               Flexible(
                 fit: FlexFit.tight,
                 flex: 1,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: IconButton(
-                    onPressed: () {
-                      isDispatch
-                          ? launch(
-                              'https://www.google.com/maps/dir/?api=1&destination='
-                              '${model.recieverLat},'
-                              '${model.recieverLon}',
-                            )
-                          : launch(
-                              'https://www.google.com/maps/dir/?api=1&destination='
-                              '${model.senderLat},'
-                              '${model.senderLon}',
-                            );
-                    },
-                    icon: const Icon(CupertinoIcons.map),
-                    color: TEXT_BLUE,
+                child: Text(
+                  "${model.packageWeight} Kg.",
+                  textAlign: TextAlign.start,
+                  style: const TextStyle(
+                    fontSize: DETAILS_TEXT,
+                    fontWeight: FontWeight.w500,
+                    height: 1,
                   ),
                 ),
               ),
@@ -89,7 +101,7 @@ class LoadListItem extends StatelessWidget {
                       model: model,
                       isDispatch: isDispatch,
                     ),
-                    isScrollControlled: false,
+                    isScrollControlled: true,
                     backgroundColor: TEXT_WHITE,
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.vertical(
@@ -105,7 +117,7 @@ class LoadListItem extends StatelessWidget {
                 fit: FlexFit.tight,
                 flex: 1,
                 child: Text(
-                  (model.packageWeight ?? 'N/a').toString(),
+                  'NRs. ${model.packagePrice ?? 0.0}',
                   textAlign: TextAlign.end,
                   style: const TextStyle(
                     fontSize: DETAILS_TEXT,
@@ -115,7 +127,7 @@ class LoadListItem extends StatelessWidget {
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );

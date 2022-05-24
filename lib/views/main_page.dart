@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:logistic_management_staff/controllers/authentication_controller.dart';
 import 'package:logistic_management_staff/views/available_orders.dart';
 import 'package:logistic_management_staff/views/load.dart';
+import 'package:logistic_management_staff/views/printer_connection.dart';
 import 'package:logistic_management_staff/views/profile.dart';
 import 'package:logistic_management_staff/views/route.dart';
 import 'package:logistic_management_staff/widgets/dialogs/custom_dialog.dart';
 import 'package:provider/provider.dart';
 
 import '../constants/colors.dart' as colors;
+import '../controllers/printer_controller.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -34,6 +36,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final printer = context.watch<PrinterController>();
     return WillPopScope(
       onWillPop: () async {
         CustomDialogs.dialogs.showCustomDialog(
@@ -43,11 +46,21 @@ class _MainPageState extends State<MainPage> {
         return false;
       },
       child: Scaffold(
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {
-        //     context.read<PickupController>().pickupPackage(packageID: 20);
-        //   },
-        // ),
+        floatingActionButton: printer.isConnected
+            ? null
+            : FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const PrinterConnection(),
+                    ),
+                  );
+                },
+                child: const Icon(
+                  CupertinoIcons.printer_fill,
+                ),
+              ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: _setCurrentIndex,

@@ -131,7 +131,7 @@ class OrderListItem extends StatelessWidget {
                           assign: isPickOff ? AssignedModel() : assign,
                           isPickOff: isPickOff,
                         ),
-                        isScrollControlled: false,
+                        isScrollControlled: true,
                         backgroundColor: TEXT_WHITE,
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.vertical(
@@ -188,7 +188,7 @@ class OrderListItem extends StatelessWidget {
                   assign: isPickOff ? AssignedModel() : assign,
                   isPickOff: isPickOff,
                 ),
-                isScrollControlled: false,
+                isScrollControlled: true,
                 backgroundColor: TEXT_WHITE,
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.vertical(
