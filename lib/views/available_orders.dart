@@ -12,6 +12,7 @@ import '../controllers/delivery_controller.dart';
 import '../controllers/pickup_controller.dart';
 import '../widgets/header.dart';
 import '../widgets/order_type_bar.dart';
+import 'all_notification.dart';
 
 class AvailableOrders extends StatefulWidget {
   const AvailableOrders({Key? key}) : super(key: key);
@@ -49,15 +50,10 @@ class _AvailableOrdersState extends State<AvailableOrders> {
               ),
               color: BUTTON_BLUE,
               onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (cxt) => SearchPage(
-                //       isPickOff: _selected == 0,
-                //     ),
-                //   ),
-                //   // MaterialPageRoute(builder: (cxt) => RouteDetail()),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const AllNotification()),
+                );
               },
             ),
           ),

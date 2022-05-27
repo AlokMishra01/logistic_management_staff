@@ -51,28 +51,28 @@ class PackageModel {
 
   PackageModel.fromJson(dynamic json) {
     id = json["id"];
-    senderName = json["sender_name"].toString();
-    senderAddress = json["sender_address"].toString();
-    senderMobileNo = json["sender_mobileno"].toString();
-    senderLat = json["sender_lat"].toString();
-    senderLon = json["sender_lon"].toString();
-    receiverName = json["reciever_name"].toString();
-    receiverAddress = json["reciever_address"].toString();
-    receiverMobileNo = json["reciever_mobileno"].toString();
-    receiverLat = json["reciever_lat"].toString();
-    receiverLon = json["reciever_lon"].toString();
-    packageType = json["package_type"].toString();
-    packageWeight = json["package_weight"].toString();
-    packageSize = json["package_size"].toString();
-    pickupTime = json["pickup_time"].toString();
-    dropOffTime = json["dropoff_time"].toString();
+    senderName = (json["sender_name"] ?? '').toString();
+    senderAddress = (json["sender_address"] ?? '').toString();
+    senderMobileNo = (json["sender_mobileno"] ?? '').toString();
+    senderLat = (json["sender_lat"] ?? '').toString();
+    senderLon = (json["sender_lon"] ?? '').toString();
+    receiverName = (json["reciever_name"] ?? '').toString();
+    receiverAddress = (json["reciever_address"] ?? '').toString();
+    receiverMobileNo = (json["reciever_mobileno"] ?? '').toString();
+    receiverLat = (json["reciever_lat"] ?? '').toString();
+    receiverLon = (json["reciever_lon"] ?? '').toString();
+    packageType = (json["package_type"] ?? '').toString();
+    packageWeight = (json["package_weight"] ?? '').toString();
+    packageSize = (json["package_size"] ?? '').toString();
+    pickupTime = (json["pickup_time"] ?? '').toString();
+    dropOffTime = (json["dropoff_time"] ?? '').toString();
     fragile = json["fragile"];
-    packagePrice = json["package_price"].toString();
+    packagePrice = (json["package_price"] ?? '').toString();
     express = json["express"];
-    createdAt = json["created_at"].toString();
-    updatedAt = json["updated_at"].toString();
+    createdAt = (json["created_at"] ?? '').toString();
+    updatedAt = (json["updated_at"] ?? '').toString();
     userId = json["user_id"];
-    packageCode = json['package_code'];
+    packageCode = (json['package_code'] ?? '').toString();
   }
 
   Map<String, dynamic> toJson() {

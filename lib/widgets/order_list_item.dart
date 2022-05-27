@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:logistic_management_staff/models/assigned_response_model.dart';
-import 'package:logistic_management_staff/models/pickup_response_model.dart';
-import 'package:logistic_management_staff/views/available_order_detail_mosal.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '/models/assigned_response_model.dart';
+import '/models/pickup_response_model.dart';
+import '/views/available_order_detail_mosal.dart';
 import '../../constants/colors.dart';
 import '../../constants/values.dart';
 import '../../widgets/detail_row.dart';
@@ -51,10 +51,10 @@ class OrderListItem extends StatelessWidget {
                       DetailRow(
                         title: "Time",
                         value: isPickOff
-                            ? pickup.pickupTime == null
+                            ? (pickup.pickupTime ?? '').isEmpty
                                 ? ''
                                 : Jiffy(pickup.pickupTime, "H:m:s").jm
-                            : assign.dropoffTime == null
+                            : (assign.dropoffTime ?? '').isEmpty
                                 ? ''
                                 : Jiffy(assign.dropoffTime, "H:m:s").jm,
                       ),

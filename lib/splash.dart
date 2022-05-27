@@ -11,6 +11,7 @@ import 'controllers/connectivity_controller.dart';
 import 'controllers/delivery_controller.dart';
 import 'controllers/dio_controller.dart';
 import 'controllers/geo_locator_controller.dart';
+import 'controllers/notification_controller.dart';
 import 'controllers/pickup_controller.dart';
 import 'services/preference_service.dart';
 import 'views/login.dart';
@@ -37,6 +38,7 @@ class _SplashState extends State<Splash> {
     context.read<PickupController>().getPendingPickups();
     context.read<DeliveryController>().getAssigned();
     context.read<DeliveryController>().getDelivered();
+    context.read<NotificationController>();
     _checkLogin();
   }
 

@@ -372,7 +372,7 @@ class _AvailableOrderDetailModalState extends State<AvailableOrderDetailModal> {
             widget.isPickOff
                 ? DetailRow(
                     title: 'Pickup Time: ',
-                    value: widget.pickup.pickupTime == null
+                    value: (widget.pickup.pickupTime ?? '').isEmpty
                         ? ''
                         : Jiffy(widget.pickup.pickupTime, "H:m:s").jm,
                   )

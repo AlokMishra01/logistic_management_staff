@@ -14,6 +14,7 @@ import 'controllers/connectivity_controller.dart';
 import 'controllers/delivery_controller.dart';
 import 'controllers/dio_controller.dart';
 import 'controllers/geo_locator_controller.dart';
+import 'controllers/notification_controller.dart';
 import 'controllers/pickup_controller.dart';
 import 'controllers/printer_controller.dart';
 
@@ -97,6 +98,12 @@ void main() async {
             conn,
             dio,
             auth,
+          ),
+        ),
+        ChangeNotifierProxyProvider<DioController, NotificationController>(
+          create: (cxt) => NotificationController(null),
+          update: (cxt, dio, n) => NotificationController(
+            dio,
           ),
         ),
       ],

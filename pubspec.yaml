@@ -3,7 +3,7 @@ description: Logistic Management Staff App
 
 publish_to: 'none'
 
-version: 1.0.2
+version: 1.0.4
 
 environment:
   sdk: ">=2.16.1 <3.0.0"
@@ -24,7 +24,7 @@ dependencies:
   flutter_polyline_points: ^1.0.0
   geolocator: ^8.2.1
   google_fonts: ^3.0.1
-  google_maps_flutter: ^2.1.5
+  google_maps_flutter: ^2.1.6
   material_color_generator: ^1.1.0
   permission_handler: ^9.2.0
   pretty_json: ^2.0.0
@@ -44,8 +44,8 @@ dependencies:
 
   device_info_plus: ^3.2.3
 
-  firebase_core: ^1.17.0
-  firebase_messaging: ^11.4.0
+  firebase_core: ^1.17.1
+  firebase_messaging: ^11.4.1
 
   flutter_bluetooth_serial: ^0.4.0
   barcode_widget: ^2.0.2
